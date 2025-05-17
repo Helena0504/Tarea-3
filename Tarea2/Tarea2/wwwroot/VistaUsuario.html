@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prueba De Concepto</title>
+
+    <link rel="stylesheet" href="css/VistaUsuario.css">
+</head>
+<body>
+    <button id="logout">Logout</button>
+    <h1>Lista de Empleados</h1>
+    <div id="filtrar">
+        <input id="inFiltro" type="text" placeholder="Buscar empleado">
+        <button id="filtro">Filtrar</button>
+    </div>
+
+    <div id="tabla">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Documento de Identidad</th>
+                    <th>Puesto</th>
+                    <th>Fecha de Contratación</th>
+                    <th>Saldo Vacaciones</th>
+                </tr>
+            </thead>
+            <tbody id="datosTabla">
+            </tbody>
+        </table>
+    </div>
+    <div id="acciones">
+        <div class="columna">
+            <button id="irInsertarEmpleado">Insertar Empleado</button>
+            <button id="consultarBtn" disabled>Consultar Empleado</button>
+            <button id="actualizarBtn" disabled>Actualizar Empleado</button>
+
+        </div>
+        <div class="columna">
+            <button id="eliminarBtn" disabled>Eliminar Empelado</button>
+            <button id="listarMovimientosBtn" disabled>Listar Movimientos</button>
+            <button id="insertarMovimientoBtn" disabled>Insertar Movimiento</button>
+
+        </div>
+    </div>
+    <script src="js/ScriptVistaUsuario.js"></script>
+</body>
+</html>

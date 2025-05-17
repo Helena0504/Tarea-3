@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualizar Empleado</title>
+    <link rel="stylesheet" href="css/ActualizarEmpleado.css">
+</head>
+<body>
+    <h1>Actualizar Empleado</h1>
+    <form>
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" required>
+
+        <label for="tipoDocumento">Tipo de Documento:</label>
+        <select id="tipoDocumento" required></select>
+
+        <label for="docId">Documento de Identidad:</label>
+        <input type="text" id="docId" required>
+
+        <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+        <input type="date" id="fechaNacimiento" required>
+
+        <label for="puesto">Puesto:</label>
+        <select id="puesto" required></select>
+
+        <label for="departamento">Departamento:</label>
+        <select id="departamento" required></select>
+    </form>
+    <button id="accionInsertar">Actualizar</button>
+    <button id="regresarInsertarVista">Regresar</button>
+    <script src="js/ScriptActualizarEmpleado.js"></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Lista de Movimientos</title>
+    <link rel="stylesheet" href="css/ListarMovimientos.css">
+</head>
+<body>
+    <h1>Lista de movimientos</h1>
+
+    <label id="idEmpleado"></label>
+    <label id="nombre"></label>
+    <label id="saldoVacaciones"></label>
+
+    <div id="tabla">
+        <table>
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Nombre del tipo de movimiento</th>
+                    <th>Monto del movimiento</th>
+                    <th>Nuevo Saldo despues de aplicar el movimiento</th>
+                    <th>Nombre del usuario que registro el movimiento</th>
+                    <th>IP</th>
+                    <th>Estampa de tiempo</th>
+                </tr>
+            </thead>
+            <tbody id="datosTabla">
+            </tbody>
+        </table>
+    </div>
+    <div id="acciones">
+
+        <div class="columna">
+            <button id="regresarMovimientosVista">Regresar</button>
+        </div>
+    </div>
+    <script src="js/ScriptListarMovimientos.js"></script>
+</body>
+</html>
