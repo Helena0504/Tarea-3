@@ -4,11 +4,11 @@ using Tarea2.Modelos;
 
 public class AccesarBD
 {
-    public static int InsertarEmpleado(string puesto, string ValorDocumentoIdentidad, string nombre, DateTime fechaContratacion, int saldoVacaciones, bool esActivo)
+    public static int InsertarEmpleado(string nombre, string idTipoDocumento, string valorDocumento, DateTime fechaNacimiento, string idDepartamento, string idPuesto, bool esActivo)
     {
         //String de conexión a BD
         string StringConexion = "Server=25.55.61.33;" +
-            "Database=Tarea2;" +
+            "Database=Tarea3;" +
             "Trusted_Connection=True;" +
             "TrustServerCertificate=True;";
 
@@ -24,13 +24,14 @@ public class AccesarBD
                     insertar.CommandType = CommandType.StoredProcedure;
 
                     //Envia parámetros de entrada
-                    insertar.Parameters.Add("@inPuesto", SqlDbType.VarChar, 128).Value = puesto;
-                    insertar.Parameters.Add("@inValorDocumentoIdentidad", SqlDbType.NChar, 32).Value = ValorDocumentoIdentidad;
                     insertar.Parameters.Add("@inNombre", SqlDbType.VarChar, 128).Value = nombre;
-                    insertar.Parameters.Add("@inFechaContratacion", SqlDbType.Date).Value = fechaContratacion;
-                    insertar.Parameters.Add("@inSaldoVacaciones", SqlDbType.Int).Value = saldoVacaciones;
-                    insertar.Parameters.Add("@inEsActivo", SqlDbType.Bit).Value = esActivo;
+                    insertar.Parameters.Add("@inIdTipoDocumento", SqlDbType.VarChar, 128).Value = idTipoDocumento;
+                    insertar.Parameters.Add("@inValorDocumento", SqlDbType.VarChar, 128).Value = valorDocumento;
+                    insertar.Parameters.Add("@inFechaNacimiento", SqlDbType.Date).Value = fechaNacimiento;
+                    insertar.Parameters.Add("@inIdDepartamento", SqlDbType.VarChar, 128).Value = idDepartamento;
 
+                    insertar.Parameters.Add("@inIdPuesto", SqlDbType.VarChar, 128).Value = idPuesto;
+                    insertar.Parameters.Add("@inEsActivo", SqlDbType.Bit).Value = esActivo;
 
                     //Recibe el código de error
                     SqlParameter outCodigoError = new SqlParameter("@outCodigoError", SqlDbType.Int)
@@ -359,8 +360,8 @@ public class AccesarBD
 
 
 
-    public static int UpdateEmpleado(int id, string nombre, int tipoDocumento, string valorDocumento,
-     DateTime fechaNacimiento, int puesto, int departamento, int idUsuario, string ip)
+    public static int UpdateEmpleado(int id, string nombre, string tipoDocumento, string valorDocumento,
+     DateTime fechaNacimiento, string puesto, string departamento, string idUsuario, string ip)
     {
         string StringConexion = "Server=25.55.61.33;Database=Tarea3;Trusted_Connection=True;TrustServerCertificate=True;";
 
@@ -376,12 +377,12 @@ public class AccesarBD
 
                     cmd.Parameters.Add("@inId", SqlDbType.Int).Value = id;
                     cmd.Parameters.Add("@inNombre", SqlDbType.VarChar, 128).Value = nombre;
-                    cmd.Parameters.Add("@inTipoDocumento", SqlDbType.Int).Value = tipoDocumento;
+                    cmd.Parameters.Add("@inTipoDocumento", SqlDbType.VarChar, 128).Value = tipoDocumento;
                     cmd.Parameters.Add("@inValorDocumento", SqlDbType.VarChar, 128).Value = valorDocumento;
                     cmd.Parameters.Add("@inFechaNacimiento", SqlDbType.Date).Value = fechaNacimiento;
-                    cmd.Parameters.Add("@inPuesto", SqlDbType.Int).Value = puesto;
-                    cmd.Parameters.Add("@inDepartamento", SqlDbType.Int).Value = departamento;
-                    cmd.Parameters.Add("@inIdPostByUser", SqlDbType.Int).Value = idUsuario;
+                    cmd.Parameters.Add("@inPuesto", SqlDbType.VarChar, 128).Value = puesto;
+                    cmd.Parameters.Add("@inDepartamento", SqlDbType.VarChar, 128).Value = departamento;
+                    cmd.Parameters.Add("@inIdPostByUser", SqlDbType.VarChar, 128).Value = idUsuario;
                     cmd.Parameters.Add("@inPostInIP", SqlDbType.VarChar, 32).Value = ip;
 
                     SqlParameter outCodigoError = new SqlParameter("@outCodigoError", SqlDbType.Int)
@@ -409,7 +410,7 @@ public class AccesarBD
     {
         //String de conexión a BD
         string StringConexion = "Server=25.55.61.33;" +
-            "Database=Tarea2;" +
+            "Database=Tarea3;" +
             "Trusted_Connection=True;" +
             "TrustServerCertificate=True;";
 
@@ -455,7 +456,7 @@ public class AccesarBD
     public static List<Empleado> MostrarEmpleados()
     {
         string StringConexion = "Server=25.55.61.33;" +
-            "Database=Tarea2;" +
+            "Database=Tarea3;" +
             "Trusted_Connection=True;" +
             "TrustServerCertificate=True;";
 
@@ -489,8 +490,9 @@ public class AccesarBD
                                 reader.GetString(2),
                                 reader.GetString(3),
                                 reader.GetDateTime(4).Date,
-                                reader.GetInt32(5),
-                                reader.GetBoolean(6)
+                                reader.GetString(5),
+                                reader.GetString(6),
+                                reader.GetBoolean(7)
                             ));
                         }
                     }
@@ -607,7 +609,7 @@ public class AccesarBD
 
     public static List<Empleado> FiltrarEmpleados(string inBusqueda, int inTipo)
     {
-        string StringConexion = "Server=25.55.61.33;Database=Tarea2;Trusted_Connection=True;TrustServerCertificate=True;";
+        string StringConexion = "Server=25.55.61.33;Database=Tarea3;Trusted_Connection=True;TrustServerCertificate=True;";
         List<Empleado> empleados = new List<Empleado>();
 
         try
@@ -638,8 +640,9 @@ public class AccesarBD
                                 reader.GetString(2),
                                 reader.GetString(3),
                                 reader.GetDateTime(4).Date,
-                                reader.GetInt32(5),
-                                reader.GetBoolean(6)
+                                reader.GetString(5),
+                    reader.GetString(6),
+                                reader.GetBoolean(7)
                             ));
                         }
                     }

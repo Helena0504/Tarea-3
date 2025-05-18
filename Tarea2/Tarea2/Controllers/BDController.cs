@@ -18,7 +18,7 @@ namespace Tarea2.Controllers
         {
             try
             {
-                int result = AccesarBD.InsertarEmpleado(empleado.Puesto, empleado.ValorDocumentoIdentidad, empleado.Nombre, empleado.FechaContratacion, empleado.SaldoVacaciones, empleado.EsActivo);
+                int result = AccesarBD.InsertarEmpleado(empleado.Nombre, empleado.IdTipoDocumento, empleado.ValorDocumento, empleado.FechaNacimiento, empleado.IdDepartamento, empleado.IdPuesto, empleado.EsActivo);
                 if (result == 0) // El stored procedure devuelve 0 todo está bien
                 {
                     return Ok(result);
@@ -186,13 +186,13 @@ namespace Tarea2.Controllers
                 int result = AccesarBD.UpdateEmpleado(
                     empleado.id,
                     empleado.Nombre,
-                    empleado.TipoDocumento,
+                    empleado.IdTipoDocumento,
                     empleado.ValorDocumento,
                     empleado.FechaNacimiento,
-                    empleado.Puesto,
-                    empleado.Departamento,
-                    empleado.IdUsuario,
-                    empleado.IP
+                    empleado.IdPuesto,
+                    empleado.IdDepartamento,
+                    empleado.IdPuesto,
+                    empleado.IP 
                 );
 
                 if (result == 0)
@@ -242,7 +242,7 @@ namespace Tarea2.Controllers
                 var empleados = AccesarBD.MostrarEmpleados();
                 if (empleados.Count == 0) //No hay empleados en la tabla
                 {
-                        return Ok(new { message = "La tabla está vacía", empleados = new List<Empleado>() });
+                    return Ok(new { message = "La tabla está vacía", empleados = new List<Empleado>() });
                 }
                 return Ok(empleados);//El stored procedure devuelve la lista de empleados
             }
