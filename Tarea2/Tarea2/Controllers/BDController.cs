@@ -11,8 +11,43 @@ namespace Tarea2.Controllers
 {
     [Route("api/BDController")]
     [ApiController]
+
     public class BDController : ControllerBase
     {
+
+        /*Funcionalidades de Empleado*/
+
+        /*1. Listar Empleados*/
+
+        [AllowAnonymous]
+        [HttpPost("ListarEmpleados")]
+        public ActionResult<List<Empleado>> ListarEmpleados([FromBody] UserRequest request)
+        {
+            try
+            {
+                DateTime postTime; /*Arreglar formato de fecha*/
+                if (!DateTime.TryParse(request.PostTime, out postTime))
+                {
+                    postTime = DateTime.Now;
+                }
+
+                var empleados = AccesarBD.ListarEmpleados(
+                    request.idPostByUser,
+                    request.PostInIP,
+                    postTime
+                );
+
+                return Ok(empleados);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al listar empleados: " + ex.Message);
+                return StatusCode(500, "Error interno");
+            }
+        }
+
+
+
         [HttpPost("InsertarControlador")]
         public ActionResult<int> InsertarEmpleado([FromBody] Empleado empleado)
         {
@@ -232,26 +267,6 @@ namespace Tarea2.Controllers
         }
 
 
-        [AllowAnonymous]
-        //Un controller de tipo GET para recibir la información de la lista de empleados
-        [HttpGet("MostrarControlador")]
-        public ActionResult<List<Empleado>> MostrarEmpleados()
-        {
-            try
-            {
-                var empleados = AccesarBD.MostrarEmpleados();
-                if (empleados.Count == 0) //No hay empleados en la tabla
-                {
-                    return Ok(new { message = "La tabla está vacía", empleados = new List<Empleado>() });
-                }
-                return Ok(empleados);//El stored procedure devuelve la lista de empleados
-            }
-            catch
-            {
-                Console.WriteLine("No se muestra la tabla");
-                return (null);
-            }
-        }
 
         [AllowAnonymous]
         [HttpPost("MostrarMovimientosControlador")]

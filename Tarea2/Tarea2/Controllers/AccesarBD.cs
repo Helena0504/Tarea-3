@@ -4,6 +4,73 @@ using Tarea2.Modelos;
 
 public class AccesarBD
 {
+
+    /*Funcionalidades de Empleado*/
+
+
+    /*1. Listar Empleados*/
+
+
+    public static List<Empleado> ListarEmpleados(int idPostByUser, string PostInIP, DateTime PostTime)
+    {
+        string StringConexion = "Server=25.55.61.33;Database=Tarea3;Trusted_Connection=True;TrustServerCertificate=True;";
+        List<Empleado> empleados = new List<Empleado>();
+
+        try
+        {
+            using (SqlConnection con = new SqlConnection(StringConexion))
+            {
+                con.Open();
+                using (SqlCommand listar = new SqlCommand("ListarEmpleados", con))
+                {
+                    listar.CommandType = CommandType.StoredProcedure;
+
+                    listar.Parameters.AddWithValue("@inIdPostByUser", idPostByUser);
+                    listar.Parameters.AddWithValue("@inPostInIP", PostInIP);
+                    listar.Parameters.AddWithValue("@inPostTime", PostTime);
+
+                    SqlParameter outCodigoError = new SqlParameter("@outCodigoError", SqlDbType.Int)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    listar.Parameters.Add(outCodigoError);
+
+                    using (SqlDataReader reader = listar.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            empleados.Add(new Empleado(
+                                reader.GetInt32(0),
+                                reader.GetInt32(1),
+                                reader.GetInt32(2),
+                                reader.GetInt32(3),
+                                reader.GetString(4),
+                                reader.GetString(5),
+                                reader.GetDateTime(6).Date,
+                                reader.GetString(7),
+                                reader.GetString(8),
+                                reader.GetString(9)
+                            ));
+                        }
+                    }
+
+                    int errorCod = (int)outCodigoError.Value;
+                    if (errorCod != 0)
+                    {
+                        Console.WriteLine("Error al listar empleados: " + errorCod);
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error al listar empleados: " + ex.Message);
+        }
+
+        return empleados.OrderBy(e => e.Nombre).ToList(); ;
+    }
+
+
     public static int InsertarEmpleado(string nombre, string idTipoDocumento, string valorDocumento, DateTime fechaNacimiento, string idDepartamento, string idPuesto, bool esActivo)
     {
         //String de conexión a BD
@@ -451,69 +518,6 @@ public class AccesarBD
             Console.WriteLine($"Detalles: {ex.StackTrace}");
             return 50025;
         }
-    }
-
-    public static List<Empleado> MostrarEmpleados()
-    {
-        string StringConexion = "Server=25.55.61.33;" +
-            "Database=Tarea3;" +
-            "Trusted_Connection=True;" +
-            "TrustServerCertificate=True;";
-
-        // Crea una lista de empleados vacía
-        List<Empleado> empleados = new List<Empleado>();
-
-        try
-        {
-            using (SqlConnection con = new SqlConnection(StringConexion))
-            {
-                con.Open();
-                using (SqlCommand mostrar = new SqlCommand("MostrarEmpleados", con))
-                {
-                    mostrar.CommandType = CommandType.StoredProcedure;
-
-                    // Añadir el parámetro de salida para código de error
-                    SqlParameter outCodigoError = new SqlParameter("@outCodigoError", SqlDbType.Int)
-                    {
-                        Direction = ParameterDirection.Output
-                    };
-                    mostrar.Parameters.Add(outCodigoError);
-
-                    using (SqlDataReader reader = mostrar.ExecuteReader())
-                    {
-                        // Mientras haya registros en la tabla, los va almacenando como empleados
-                        while (reader.Read())
-                        {
-                            empleados.Add(new Empleado(
-                                reader.GetInt32(0),
-                                reader.GetString(1),
-                                reader.GetString(2),
-                                reader.GetString(3),
-                                reader.GetDateTime(4).Date,
-                                reader.GetString(5),
-                                reader.GetString(6),
-                                reader.GetBoolean(7)
-                            ));
-                        }
-                    }
-
-                    // Obtener el código de error 
-                    int errorCod = (int)outCodigoError.Value;
-                    if (errorCod != 0)
-                    {
-                        // Error en capa lógica
-                        Console.WriteLine("Error al mostrar empleados: " + errorCod);
-                    }
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            // Error en capa lógica
-            Console.WriteLine("Error al mostrar empleados");
-        }
-
-        return empleados.OrderBy(e => e.Nombre).ToList(); //Orden ascendente por nombre
     }
 
     public static List<Movimiento> MostrarMovimientos(int idEmpleado)
