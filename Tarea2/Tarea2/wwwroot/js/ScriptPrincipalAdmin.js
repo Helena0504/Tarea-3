@@ -1,7 +1,6 @@
 /*Variables Globales*/
 let empleadoSeleccionado = null;
 let filaSeleccionada = null;
-
 //var usuario = JSON.parse(localStorage.getItem('usuario'));
 //localStorage.setItem('usuario', JSON.stringify(usuario));
 //console.log('usuario: ', usuario);
@@ -40,6 +39,38 @@ document.addEventListener('DOMContentLoaded', function () {
         return (null);
     }
 });
+
+
+/*Va a la pantalla Editar Empleado*/
+document.getElementById("actualizarBtn").addEventListener("click", () => {
+    if (empleadoSeleccionado) {
+        //localStorage.setItem('empleado', JSON.stringify(empleadoSeleccionado));
+        //localStorage.setItem('usuario', JSON.stringify(usuario));
+        window.location.href = 'ActualizarEmpleado.html';
+    }
+});
+
+
+
+/*Va a la pantalla Insertar Empleado*/
+document.getElementById("irInsertarEmpleado").addEventListener("click", () => {
+    //localStorage.setItem('usuario', JSON.stringify(usuario));
+    window.location.href = 'InsertarEmpleado.html';
+});
+
+
+/*Llama a eliminar Empleados*/
+document.getElementById("eliminarBtn").addEventListener("click", () => {
+    if (empleadoSeleccionado) {
+        if (confirm(`Seguro que deseas eliminar al empleado: ${empleadoSeleccionado.nombre} documento de identidad ${empleadoSeleccionado.valorDocumentoIdentidad.trim()}?`)) {
+            eliminarEmpleado(empleadoSeleccionado.id, 1, "127.0.0.1", new Date().toISOString());
+        } else {
+            alert("Eliminacion cancelada.");
+        }
+
+    }
+});
+
 
 
 //Se hace logout
@@ -214,109 +245,42 @@ function filtrarEmpleado(busqueda, tipo, idPostByUser, PostInIP, PostTime) {
 
 
 
-//function actualizarBotones() {
-//    if (empleadoSeleccionado) {
-//        document.getElementById("consultarBtn").disabled = false;
-//        document.getElementById("actualizarBtn").disabled = false;
-//        document.getElementById("eliminarBtn").disabled = false;
-//        document.getElementById("listarMovimientosBtn").disabled = false;
-//        document.getElementById("insertarMovimientoBtn").disabled = false;
-//    } else {
-//        document.getElementById("consultarBtn").disabled = true;
-//        document.getElementById("actualizarBtn").disabled = true;
-//        document.getElementById("eliminarBtn").disabled = true;
-//        document.getElementById("listarMovimientosBtn").disabled = true;
-//        document.getElementById("insertarMovimientoBtn").disabled = true;
-//    }
-//}
 
 
 
-
-//document.getElementById("consultarBtn").addEventListener("click", () => {
-//    if (empleadoSeleccionado) {
-//        localStorage.setItem('empleado', JSON.stringify(empleadoSeleccionado));
-//        window.location.href = 'ConsultarEmpleado.html';
-
-//    }
-//});
-
-//document.getElementById("irInsertarEmpleado").addEventListener("click", () => {
-//        localStorage.setItem('usuario', JSON.stringify(usuario));
-//        window.location.href = 'InsertarEmpleado.html';
-//});
-
-//document.getElementById("actualizarBtn").addEventListener("click", () => {
-//    if (empleadoSeleccionado) {
-//        localStorage.setItem('empleado', JSON.stringify(empleadoSeleccionado));
-//        localStorage.setItem('usuario', JSON.stringify(usuario));
-//        window.location.href = 'ActualizarEmpleado.html';
-//    }
-//});
-
-//document.getElementById("eliminarBtn").addEventListener("click", () => {
-//    if (empleadoSeleccionado) {
-//        if (confirm(`Seguro que deseas eliminar al empleado: ${empleadoSeleccionado.nombre} documento de identidad ${empleadoSeleccionado.valorDocumentoIdentidad.trim()}?`)) {
-//            insertarBitacora(10, `${empleadoSeleccionado.valorDocumentoIdentidad.trim()}  ${empleadoSeleccionado.nombre} ${empleadoSeleccionado.puesto} ${empleadoSeleccionado.saldoVacaciones}`, parseInt(usuario.id), "25.55.61.33", new Date())
-//            deleteEmpleado(empleadoSeleccionado.id);
-//        } else {
-//            insertarBitacora(9, `${empleadoSeleccionado.valorDocumentoIdentidad.trim()}  ${empleadoSeleccionado.nombre} ${empleadoSeleccionado.puesto} ${empleadoSeleccionado.saldoVacaciones}`, parseInt(usuario.id), "25.55.61.33", new Date())
-//            alert("Eliminacion cancelada.");
-//        }
-
-//    }
-//});
-
-//document.getElementById("listarMovimientosBtn").addEventListener("click", () => {
-//    if (empleadoSeleccionado) {
-//        localStorage.setItem('empleado', JSON.stringify(empleadoSeleccionado));
-//        window.location.href = 'ListarMovimientos.html';
-//    }
-//});
-
-//document.getElementById("insertarMovimientoBtn").addEventListener("click", () => {
-//    if (empleadoSeleccionado) {
-//        localStorage.setItem('empleado', JSON.stringify(empleadoSeleccionado));
-//        localStorage.setItem('usuario', JSON.stringify(usuario));
-//        window.location.href = 'InsertarMovimiento.html';
-//    }
-//});
-
-
-
-//// Llamar a stored procedures
-//const deleteEmpleado = (id) => {
-//        fetch('https://localhost:5001/api/BDController/DeleteControlador', {
-//            method: 'POST',
-//            headers: {
-//                'Content-Type': 'application/json',
-//            },
-//            body: JSON.stringify(id)
-//        })
-//        .then(respuesta => {
-//            if (!respuesta.ok) {
-//                return respuesta.json().then(errorDetails => {
-//                    // Aqui logueas el codigo de error y el mensaje para diagnosticar el problema
-//                    console.log("Codigo de error:", errorDetails.codigoError);
-//                    console.log("Mensaje de error:", errorDetails.message);
-//                    throw new Error(`Error: ${errorDetails.message} - Codigo de error: ${errorDetails.codigoError}`);
-//                });
-//            }
-//            return respuesta.json();
-//        })
-//        .then(datos => {
-//            alert("Empleado eliminado exitosamente");
-//            mostrarEmpleado();
-//        })
-//        .catch((error) => {
-//            // Este bloque captura y muestra cualquier error que ocurra durante la solicitud
-//            console.error("Error al intentar eliminar el empleado:", error);
-//            alert(error.message);
-//        });
-//}
-
-
-
+/*5. Eliminar empleado*/
+const eliminarEmpleado = (id, idPostByUser, PostInIP, PostTime) => {
+        fetch('https://localhost:5001/api/BDController/EliminarEmpleado', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id: id,
+                idPostByUser: idPostByUser,
+                PostInIP: PostInIP,
+                PostTime: PostTime || new Date().toISOString()
+            })
+        })
+        .then(respuesta => {
+            if (!respuesta.ok) {
+                return respuesta.json().then(errorDetails => {
+                    console.log("Codigo de error:", errorDetails.codigoError);
+                    console.log("Mensaje de error:", errorDetails.message);
+                    throw new Error(`Error: ${errorDetails.message} - Codigo de error: ${errorDetails.codigoError}`);
+                });
+            }
+            return respuesta.json();
+        })
+        .then(datos => {
+            alert("Empleado eliminado exitosamente");
+            listarEmpleados(1, "127.0.0.1", new Date().toISOString()); //Cambiar
+        })
+        .catch((error) => {
+            console.error("Error al intentar eliminar el empleado:", error);
+            alert(error.message);
+        });
+}
 
 
 
@@ -327,4 +291,15 @@ function getCurrentDateTime() {
 }
 
 
-   
+/*Actualiza botones*/
+function actualizarBotones() {
+    if (empleadoSeleccionado) {
+        document.getElementById("actualizarBtn").disabled = false;
+        document.getElementById("eliminarBtn").disabled = false;
+        document.getElementById("impersonarEmpleadoBtn").disabled = false;
+    } else {
+        document.getElementById("actualizarBtn").disabled = true;
+        document.getElementById("eliminarBtn").disabled = true;
+        document.getElementById("impersonarEmpleadoBtn").disabled = true;
+    }
+}

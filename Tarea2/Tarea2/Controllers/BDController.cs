@@ -79,6 +79,38 @@ namespace Tarea2.Controllers
             }
         }
 
+        /*5. Eliminar Empleado*/
+
+        [HttpPost("EliminarEmpleado")]
+        public ActionResult<int> EliminarEmpleado([FromBody] EliminarRequest eliminar)
+        {
+            try
+            {
+                DateTime postTime; /*Arreglar formato de fecha*/
+                if (!DateTime.TryParse(eliminar.PostTime, out postTime))
+                {
+                    postTime = DateTime.Now;
+                }
+
+                var empleados = AccesarBD.EliminarEmpleado(
+                    eliminar.idPostByUser,
+                    eliminar.PostInIP,
+                    postTime,
+                    eliminar.id
+                );
+
+                return Ok(empleados);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al Eliminar Empleado: " + ex.Message);
+                return StatusCode(500, "Error interno");
+            }
+        }
+
+
+
+
 
 
         [HttpPost("InsertarControlador")]
@@ -270,27 +302,6 @@ namespace Tarea2.Controllers
                 else
                 {
                     return BadRequest(new { message = "Error al actualizar empleado", codigoError = result });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "Error en servidor", exception = ex.Message });
-            }
-        }
-
-        [HttpPost("DeleteControlador")]
-        public ActionResult<int> DeleteEmpleado([FromBody] int id)
-        {
-            try
-            {
-                int result = AccesarBD.DeleteEmpleado(id);
-                if (result == 0)
-                {
-                    return Ok(result);
-                }
-                else
-                {
-                    return StatusCode(400, new { message = "Error al Delete empleado", codigoError = result });
                 }
             }
             catch (Exception ex)

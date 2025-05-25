@@ -137,6 +137,61 @@ public class AccesarBD
 
 
 
+    /*5. Eliminar Empleado*/
+
+    public static int EliminarEmpleado(int idPostByUser, string PostInIP, DateTime PostTime, int id)
+    {
+        //String de conexión a BD
+        string StringConexion = "Server=25.55.61.33;" +
+            "Database=Tarea3;" +
+            "Trusted_Connection=True;" +
+            "TrustServerCertificate=True;";
+        try
+        {
+            using (SqlConnection con = new SqlConnection(StringConexion))
+            {
+                //Abre conexión y se crea el comando insertar
+                con.Open();
+
+                using (SqlCommand eliminar = new SqlCommand("EliminarEmpleado", con))
+                {
+                    eliminar.CommandType = CommandType.StoredProcedure;
+
+                    //Envia parámetros de entrada
+                    eliminar.Parameters.AddWithValue("@inIdPostByUser", idPostByUser);
+                    eliminar.Parameters.AddWithValue("@inPostInIP", PostInIP);
+                    eliminar.Parameters.AddWithValue("@inPostTime", PostTime);
+                    eliminar.Parameters.Add("@inId", SqlDbType.Int).Value = id;
+
+
+                    //Recibe el código de error
+                    SqlParameter outCodigoError = new SqlParameter("@outCodigoError", SqlDbType.Int)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    eliminar.Parameters.Add(outCodigoError);
+
+                    //Se ejecuta el Stored procedure
+                    eliminar.ExecuteNonQuery();
+
+                    //Devuelve el código de error
+                    return (int)outCodigoError.Value;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            //Error en capa lógica
+            Console.WriteLine($"Error al intentar conectar o ejecutar la consulta: {ex.Message}");
+            Console.WriteLine($"Detalles: {ex.StackTrace}");
+            return 50025;
+        }
+    }
+
+
+
+
+
 
 
     public static int InsertarEmpleado(string nombre, string idTipoDocumento, string valorDocumento, DateTime fechaNacimiento, string idDepartamento, string idPuesto, bool esActivo)
@@ -541,52 +596,7 @@ public class AccesarBD
     }
 
 
-    public static int DeleteEmpleado(int id)
-    {
-        //String de conexión a BD
-        string StringConexion = "Server=25.55.61.33;" +
-            "Database=Tarea3;" +
-            "Trusted_Connection=True;" +
-            "TrustServerCertificate=True;";
-
-        try
-        {
-            using (SqlConnection con = new SqlConnection(StringConexion))
-            {
-                //Abre conexión y se crea el comando insertar
-                con.Open();
-
-                using (SqlCommand insertar = new SqlCommand("DeleteEmpleado", con))
-                {
-                    insertar.CommandType = CommandType.StoredProcedure;
-
-                    //Envia parámetros de entrada
-                    insertar.Parameters.Add("@inId", SqlDbType.Int).Value = id;
-
-
-                    //Recibe el código de error
-                    SqlParameter outCodigoError = new SqlParameter("@outCodigoError", SqlDbType.Int)
-                    {
-                        Direction = ParameterDirection.Output
-                    };
-                    insertar.Parameters.Add(outCodigoError);
-
-                    //Se ejecuta el Stored procedure
-                    insertar.ExecuteNonQuery();
-
-                    //Devuelve el código de error
-                    return (int)outCodigoError.Value;
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            //Error en capa lógica
-            Console.WriteLine($"Error al intentar conectar o ejecutar la consulta: {ex.Message}");
-            Console.WriteLine($"Detalles: {ex.StackTrace}");
-            return 50025;
-        }
-    }
+    
 
     public static List<Movimiento> MostrarMovimientos(int idEmpleado)
     {
