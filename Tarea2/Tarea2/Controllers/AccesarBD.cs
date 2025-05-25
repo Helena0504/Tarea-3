@@ -399,10 +399,10 @@ public class AccesarBD
 
 
     /*Cargar Puestos para Insertar y Editar*/
-    public static List<Puesto> MostrarPuestos()
+    public static List<Puesto> ListarPuestos()
     {
         string StringConexion = "Server=25.55.61.33;" +
-            "Database=Tarea2;" +
+            "Database=Tarea3;" +
             "Trusted_Connection=True;" +
             "TrustServerCertificate=True;";
 
@@ -414,7 +414,7 @@ public class AccesarBD
             using (SqlConnection con = new SqlConnection(StringConexion))
             {
                 con.Open();
-                using (SqlCommand mostrar = new SqlCommand("MostrarPuestos", con))
+                using (SqlCommand mostrar = new SqlCommand("ListarPuestos", con))
                 {
                     mostrar.CommandType = CommandType.StoredProcedure;
 
@@ -457,7 +457,127 @@ public class AccesarBD
         return Puestos;
     }
 
+
+
+
+    /*Cargar Departamentos para Insertar y Editar*/
+    public static List<Departamento> ListarDepartamentos()
+    {
+        string StringConexion = "Server=25.55.61.33;" +
+            "Database=Tarea3;" +
+            "Trusted_Connection=True;" +
+            "TrustServerCertificate=True;";
+
+        // Crea una lista de Deps vacía
+        List<Departamento> Departamentos = new List<Departamento>();
+
+        try
+        {
+            using (SqlConnection con = new SqlConnection(StringConexion))
+            {
+                con.Open();
+                using (SqlCommand mostrar = new SqlCommand("ListarDepartamentos", con))
+                {
+                    mostrar.CommandType = CommandType.StoredProcedure;
+
+                    // Añadir el parámetro de salida para código de error
+                    SqlParameter outCodigoError = new SqlParameter("@outCodigoError", SqlDbType.Int)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    mostrar.Parameters.Add(outCodigoError);
+
+                    using (SqlDataReader reader = mostrar.ExecuteReader())
+                    {
+                        // Mientras haya registros en la tabla, los va almacenando como Puestos
+                        while (reader.Read())
+                        {
+                            Departamentos.Add(new Departamento(
+                                reader.GetInt32(0),
+                                reader.GetString(1)
+                            ));
+                        }
+                    }
+
+                    // Obtener el código de error 
+                    int errorCod = (int)outCodigoError.Value;
+                    if (errorCod != 0)
+                    {
+                        // Error en capa lógica
+                        Console.WriteLine("Error al mostrar Departamentos: " + errorCod);
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Error en capa lógica
+            Console.WriteLine("Error al mostrar Departamentos");
+        }
+
+        return Departamentos;
+    }
+
+
+    /*Cargar TipoDoc para Insertar y Editar*/
+    public static List<TipoDocId> ListarTipoDocIds()
+    {
+        string StringConexion = "Server=25.55.61.33;" +
+            "Database=Tarea3;" +
+            "Trusted_Connection=True;" +
+            "TrustServerCertificate=True;";
+
+        // Crea una lista de Deps vacía
+        List<TipoDocId> TipoDocIds = new List<TipoDocId>();
+
+        try
+        {
+            using (SqlConnection con = new SqlConnection(StringConexion))
+            {
+                con.Open();
+                using (SqlCommand mostrar = new SqlCommand("ListarTipoDocIds", con))
+                {
+                    mostrar.CommandType = CommandType.StoredProcedure;
+
+                    // Añadir el parámetro de salida para código de error
+                    SqlParameter outCodigoError = new SqlParameter("@outCodigoError", SqlDbType.Int)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    mostrar.Parameters.Add(outCodigoError);
+
+                    using (SqlDataReader reader = mostrar.ExecuteReader())
+                    {
+                        // Mientras haya registros en la tabla, los va almacenando como Puestos
+                        while (reader.Read())
+                        {
+                            TipoDocIds.Add(new TipoDocId(
+                                reader.GetInt32(0),
+                                reader.GetString(1)
+                            ));
+                        }
+                    }
+
+                    // Obtener el código de error 
+                    int errorCod = (int)outCodigoError.Value;
+                    if (errorCod != 0)
+                    {
+                        // Error en capa lógica
+                        Console.WriteLine("Error al mostrar TipoDocIds: " + errorCod);
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Error en capa lógica
+            Console.WriteLine("Error al mostrar TipoDocIds");
+        }
+
+        return TipoDocIds;
+    }
+
+
 }
 
 
-    

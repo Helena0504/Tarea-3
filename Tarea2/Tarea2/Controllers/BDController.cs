@@ -230,21 +230,63 @@ namespace Tarea2.Controllers
         }
 
 
-        [HttpGet("MostrarPuestoControlador")]
-        public ActionResult<List<Puesto>> MostrarPuestos()
+        /*Listar Puestos para Insertar y Editar*/
+        [HttpGet("ListarPuestos")]
+        public ActionResult<List<Puesto>> ListarPuestos()
         {
             try
             {
-                var puestos = AccesarBD.MostrarPuestos();
+                var puestos = AccesarBD.ListarPuestos();
                 if (puestos.Count == 0)
                 {
-                    return Ok(new { message = "La tabla está vacía", empleados = new List<Puesto>() });
+                    return Ok(new { message = "La tabla está vacía", puestos = new List<Puesto>() });
                 }
                 return Ok(puestos);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error al obtener los puestos: {ex.Message}");
+                return StatusCode(500, new { message = "Error en el servidor" });
+            }
+        }
+
+        /*Listar Puestos para Insertar y Editar*/
+        [HttpGet("ListarDepartamentos")]
+        public ActionResult<List<Puesto>> ListarDepartamentos()
+        {
+            try
+            {
+                var puestos = AccesarBD.ListarDepartamentos();
+                if (puestos.Count == 0)
+                {
+                    return Ok(new { message = "La tabla está vacía", puestos = new List<Departamento>() });
+                }
+                return Ok(puestos);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener los departamentos: {ex.Message}");
+                return StatusCode(500, new { message = "Error en el servidor" });
+            }
+        }
+
+
+        /*Listar Puestos para Insertar y Editar*/
+        [HttpGet("ListarTipoDocIds")]
+        public ActionResult<List<Puesto>> ListarTipoDocIds()
+        {
+            try
+            {
+                var puestos = AccesarBD.ListarTipoDocIds();
+                if (puestos.Count == 0)
+                {
+                    return Ok(new { message = "La tabla está vacía", puestos = new List<TipoDocId>() });
+                }
+                return Ok(puestos);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener los tipos doc id: {ex.Message}");
                 return StatusCode(500, new { message = "Error en el servidor" });
             }
         }
