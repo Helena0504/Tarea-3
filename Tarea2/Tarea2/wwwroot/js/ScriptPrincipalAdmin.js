@@ -1,16 +1,16 @@
 /*Variables Globales*/
 let empleadoSeleccionado = null;
 let filaSeleccionada = null;
-//var usuario = JSON.parse(localStorage.getItem('usuario'));
-//localStorage.setItem('usuario', JSON.stringify(usuario));
-//console.log('usuario: ', usuario);
+var usuario = JSON.parse(localStorage.getItem('usuario'));
+localStorage.setItem('usuario', JSON.stringify(usuario));
+console.log('usuario: ', usuario);
 
 
 
 
 /*Carga la tabla cuando se corre la pagina*/
 document.addEventListener("DOMContentLoaded", function () {
-    listarEmpleados(1, "127.0.0.1", new Date().toISOString()); //Cambiar
+    listarEmpleados(parseInt(usuario.id), "127.0.0.1", new Date().toISOString()); 
     console.log("Script se ha cargado correctamente");
 });
 
@@ -25,11 +25,11 @@ document.addEventListener('DOMContentLoaded', function () {
             const letraRegex = /^[a-zA-Z\s\-]+$/;
 
             if (inFiltro === "") {
-                listarEmpleados(1, "127.0.0.1", new Date().toISOString()); //Cambiar
+                listarEmpleados(parseInt(usuario.id), "127.0.0.1", new Date().toISOString()); 
             } else if (numRegex.test(inFiltro)) {
-                filtrarEmpleado(inFiltro, 2, 1, "127.0.0.1", new Date().toISOString()); //Cambiar
+                filtrarEmpleado(inFiltro, 2, parseInt(usuario.id), "127.0.0.1", new Date().toISOString()); 
             } else if (letraRegex.test(inFiltro)) {
-                filtrarEmpleado(inFiltro, 1, 1, "127.0.0.1", new Date().toISOString()); //Cambiar
+                filtrarEmpleado(inFiltro, 1, parseInt(usuario.id), "127.0.0.1", new Date().toISOString()); 
             } else {
                 alert("El filtro por nombre tiene solo letras y el filtro por identificacion solo numeros");
                 }
@@ -44,8 +44,8 @@ document.addEventListener('DOMContentLoaded', function () {
 /*Va a la pantalla Editar Empleado*/
 document.getElementById("actualizarBtn").addEventListener("click", () => {
     if (empleadoSeleccionado) {
-        //localStorage.setItem('empleado', JSON.stringify(empleadoSeleccionado));
-        //localStorage.setItem('usuario', JSON.stringify(usuario));
+        localStorage.setItem('empleado', JSON.stringify(empleadoSeleccionado));
+        localStorage.setItem('usuario', JSON.stringify(usuario));
         window.location.href = 'ActualizarEmpleado.html';
     }
 });
@@ -54,7 +54,7 @@ document.getElementById("actualizarBtn").addEventListener("click", () => {
 
 /*Va a la pantalla Insertar Empleado*/
 document.getElementById("irInsertarEmpleado").addEventListener("click", () => {
-    //localStorage.setItem('usuario', JSON.stringify(usuario));
+    localStorage.setItem('usuario', JSON.stringify(usuario));
     window.location.href = 'InsertarEmpleado.html';
 });
 
@@ -63,7 +63,7 @@ document.getElementById("irInsertarEmpleado").addEventListener("click", () => {
 document.getElementById("eliminarBtn").addEventListener("click", () => {
     if (empleadoSeleccionado) {
         if (confirm(`Seguro que deseas eliminar al empleado: ${empleadoSeleccionado.nombre} documento de identidad ${empleadoSeleccionado.valorDocumentoIdentidad.trim()}?`)) {
-            eliminarEmpleado(empleadoSeleccionado.id, 1, "127.0.0.1", new Date().toISOString());
+            eliminarEmpleado(empleadoSeleccionado.id, parseInt(usuario.id), "127.0.0.1", new Date().toISOString());
         } else {
             alert("Eliminacion cancelada.");
         }
@@ -73,19 +73,19 @@ document.getElementById("eliminarBtn").addEventListener("click", () => {
 
 
 
-//Se hace logout
-//document.addEventListener('DOMContentLoaded', function () {
-//    try {
-//        const button = document.getElementById('logout');
-//        button.addEventListener('click', function () {
-//            insertarBitacora(4, "", parseInt(usuario.id), "25.55.61.33", new Date())
-//            window.location.href = 'Login.html';
-//        });
-//    }
-//    catch {
-//        return (null);
-//    }
-//});
+/*Se hace logout*/
+document.addEventListener('DOMContentLoaded', function () {
+    try {
+        const button = document.getElementById('logout');
+        button.addEventListener('click', function () {
+            //insertarBitacora(2, "", parseInt(usuario.id), "25.55.61.33", new Date())  HACER ALGO
+            window.location.href = 'Login.html';
+        });
+    }
+    catch {
+        return (null);
+    }
+});
 
 
 
@@ -274,7 +274,7 @@ const eliminarEmpleado = (id, idPostByUser, PostInIP, PostTime) => {
         })
         .then(datos => {
             alert("Empleado eliminado exitosamente");
-            listarEmpleados(1, "127.0.0.1", new Date().toISOString()); //Cambiar
+            listarEmpleados(parseInt(usuario.id), "127.0.0.1", new Date().toISOString()); 
         })
         .catch((error) => {
             console.error("Error al intentar eliminar el empleado:", error);
