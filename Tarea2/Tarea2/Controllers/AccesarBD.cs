@@ -1,4 +1,5 @@
 using Microsoft.Data.SqlClient;
+using System.Collections.Generic;
 using System.Data;
 using Tarea2.Modelos;
 
@@ -9,7 +10,6 @@ public class AccesarBD
 
 
     /*1. Listar Empleados*/
-
 
     public static List<Empleado> ListarEmpleados(int idPostByUser, string PostInIP, DateTime PostTime)
     {
@@ -69,6 +69,74 @@ public class AccesarBD
 
         return empleados.OrderBy(e => e.Nombre).ToList(); ;
     }
+
+
+
+    /*2. Listar Empleados con Filtro*/
+
+    public static List<Empleado> FiltrarEmpleados(string inBusqueda, int inTipo, int idPostByUser, string PostInIP, DateTime PostTime)
+    {
+        string StringConexion = "Server=25.55.61.33;Database=Tarea3;Trusted_Connection=True;TrustServerCertificate=True;";
+        List<Empleado> empleados = new List<Empleado>();
+
+        try
+        {
+            using (SqlConnection con = new SqlConnection(StringConexion))
+            {
+                con.Open();
+                using (SqlCommand filtrar = new SqlCommand("FiltrarEmpleados", con))
+                {
+                    filtrar.CommandType = CommandType.StoredProcedure;
+
+                    filtrar.Parameters.AddWithValue("@inIdPostByUser", idPostByUser);
+                    filtrar.Parameters.AddWithValue("@inPostInIP", PostInIP);
+                    filtrar.Parameters.AddWithValue("@inPostTime", PostTime);
+                    filtrar.Parameters.AddWithValue("@inBusqueda", inBusqueda);
+                    filtrar.Parameters.AddWithValue("@inTipo", inTipo);
+
+                    SqlParameter outCodigoError = new SqlParameter("@outCodigoError", SqlDbType.Int)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    filtrar.Parameters.Add(outCodigoError);
+
+                    using (SqlDataReader reader = filtrar.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            empleados.Add(new Empleado(
+                                reader.GetInt32(0),
+                                reader.GetInt32(1),
+                                reader.GetInt32(2),
+                                reader.GetInt32(3),
+                                reader.GetString(4),
+                                reader.GetString(5),
+                                reader.GetDateTime(6).Date,
+                                reader.GetString(7),
+                                reader.GetString(8),
+                                reader.GetString(9)
+                            ));
+                        }
+                    }
+
+                    int errorCod = (int)outCodigoError.Value;
+                    if (errorCod != 0)
+                    {
+                        Console.WriteLine("Error al filtrar empleados: " + errorCod);
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error al filtrar empleados: " + ex.Message);
+        }
+
+        return empleados.OrderBy(e => e.Nombre).ToList(); ;
+    }
+
+
+
 
 
     public static int InsertarEmpleado(string nombre, string idTipoDocumento, string valorDocumento, DateTime fechaNacimiento, string idDepartamento, string idPuesto, bool esActivo)
@@ -608,63 +676,6 @@ public class AccesarBD
             Console.WriteLine("Database Error: " + ex.Message);
             return 50005;
         }
-    }
-
-
-    public static List<Empleado> FiltrarEmpleados(string inBusqueda, int inTipo)
-    {
-        string StringConexion = "Server=25.55.61.33;Database=Tarea3;Trusted_Connection=True;TrustServerCertificate=True;";
-        List<Empleado> empleados = new List<Empleado>();
-
-        try
-        {
-            using (SqlConnection con = new SqlConnection(StringConexion))
-            {
-                con.Open();
-                using (SqlCommand filtrar = new SqlCommand("FiltrarEmpleados", con))
-                {
-                    filtrar.CommandType = CommandType.StoredProcedure;
-
-                    filtrar.Parameters.AddWithValue("@inBusqueda", inBusqueda);
-                    filtrar.Parameters.AddWithValue("@inTipo", inTipo);
-
-                    SqlParameter outCodigoError = new SqlParameter("@outCodigoError", SqlDbType.Int)
-                    {
-                        Direction = ParameterDirection.Output
-                    };
-                    filtrar.Parameters.Add(outCodigoError);
-
-                    using (SqlDataReader reader = filtrar.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            empleados.Add(new Empleado(
-                                reader.GetInt32(0),
-                                reader.GetString(1),
-                                reader.GetString(2),
-                                reader.GetString(3),
-                                reader.GetDateTime(4).Date,
-                                reader.GetString(5),
-                    reader.GetString(6),
-                                reader.GetBoolean(7)
-                            ));
-                        }
-                    }
-
-                    int errorCod = (int)outCodigoError.Value;
-                    if (errorCod != 0)
-                    {
-                        Console.WriteLine("Error al filtrar empleados: " + errorCod);
-                    }
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error al filtrar empleados: " + ex.Message);
-        }
-
-        return empleados.OrderBy(e => e.Nombre).ToList(); ;
     }
 
 

@@ -48,6 +48,39 @@ namespace Tarea2.Controllers
 
 
 
+        /*2. Listar Empleados con Filtro*/
+
+        [AllowAnonymous]
+        [HttpPost("FiltrarEmpleados")]
+        public ActionResult<List<Empleado>> FiltrarEmpleados([FromBody] FiltroRequest filtro)
+        {
+            try
+            {
+                DateTime postTime; /*Arreglar formato de fecha*/
+                if (!DateTime.TryParse(filtro.PostTime, out postTime))
+                {
+                    postTime = DateTime.Now;
+                }
+
+                var empleados = AccesarBD.FiltrarEmpleados(
+                    filtro.inBusqueda, 
+                    filtro.inTipo,
+                    filtro.idPostByUser,
+                    filtro.PostInIP,
+                    postTime
+                );
+
+                return Ok(empleados);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al listar empleados con filtro: " + ex.Message);
+                return StatusCode(500, "Error interno");
+            }
+        }
+
+
+
         [HttpPost("InsertarControlador")]
         public ActionResult<int> InsertarEmpleado([FromBody] Empleado empleado)
         {
@@ -325,22 +358,6 @@ namespace Tarea2.Controllers
             }
         }
 
-
-        [AllowAnonymous]
-        [HttpPost("FiltrarControlador")]
-        public ActionResult<List<Empleado>> FiltrarEmpleados([FromBody] FiltroRequest filtro)
-        {
-            try
-            {
-                var empleados = AccesarBD.FiltrarEmpleados(filtro.inBusqueda, filtro.inTipo);
-                return Ok(empleados);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("No se muestra la tabla: " + ex.Message);
-                return StatusCode(500, "Error interno");
-            }
-        }
 
         [HttpPost("ManejarError")]
         public ActionResult<ManejoErrorResponse> ManejarError([FromBody] ManejoErrorRequest request)

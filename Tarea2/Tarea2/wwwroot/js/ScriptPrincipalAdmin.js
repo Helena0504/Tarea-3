@@ -11,19 +11,38 @@ let filaSeleccionada = null;
 
 /*Carga la tabla cuando se corre la pagina*/
 document.addEventListener("DOMContentLoaded", function () {
-    listarEmpleados(1, "127.0.0.1", new Date().toISOString());
+    listarEmpleados(1, "127.0.0.1", new Date().toISOString()); //Cambiar
     console.log("Script se ha cargado correctamente");
 });
 
 
-/*Le da formato a la fecha*/
-function getCurrentDateTime() {
-    const now = new Date();
-    return now.toISOString(); // Returns ISO format that C# can parse
-}
+/*Carga el filtro*/
+document.addEventListener('DOMContentLoaded', function () {
+    try {
+        const button = document.getElementById('filtro');
+        button.addEventListener('click', function () {
+            const inFiltro = document.getElementById("inFiltro").value.trim();
+            const numRegex = /^\d+$/;
+            const letraRegex = /^[a-zA-Z\s\-]+$/;
+
+            if (inFiltro === "") {
+                listarEmpleados(1, "127.0.0.1", new Date().toISOString()); //Cambiar
+            } else if (numRegex.test(inFiltro)) {
+                filtrarEmpleado(inFiltro, 2, 1, "127.0.0.1", new Date().toISOString()); //Cambiar
+            } else if (letraRegex.test(inFiltro)) {
+                filtrarEmpleado(inFiltro, 1, 1, "127.0.0.1", new Date().toISOString()); //Cambiar
+            } else {
+                alert("El filtro por nombre tiene solo letras y el filtro por identificacion solo numeros");
+                }
+        });
+    }
+    catch {
+        return (null);
+    }
+});
 
 
-//Si le da a boton login cambia de pagina
+//Se hace logout
 //document.addEventListener('DOMContentLoaded', function () {
 //    try {
 //        const button = document.getElementById('logout');
@@ -38,33 +57,10 @@ function getCurrentDateTime() {
 //});
 
 
-//document.addEventListener('DOMContentLoaded', function () {
-//    try {
-//        const button = document.getElementById('filtro');
-//        button.addEventListener('click', function () {
-//            const inFiltro = document.getElementById("inFiltro").value.trim();
-//            const numRegex = /^\d+$/;
-//            const letraRegex = /^[a-zA-Z\s\-]+$/;
-
-//            if (inFiltro === "") {
-//                mostrarEmpleado();
-//            } else if (numRegex.test(inFiltro)) {
-//                filtrarEmpleado(inFiltro, 2);
-//                insertarBitacora(12, `${inFiltro}`, parseInt(usuario.id), "25.55.61.33", new Date())
-//            } else if (letraRegex.test(inFiltro)) {
-//                insertarBitacora(11, `${inFiltro}`, parseInt(usuario.id), "25.55.61.33", new Date())
-//                filtrarEmpleado(inFiltro, 1);
-//            } else {
-//                alert("El filtro por nombre tiene solo letras y el filtro por identificacion solo numeros");
-//                }
-//        });
-//    }
-//    catch {
-//        return (null);
-//    }
-//});
 
 
+
+/*1. Listar Empleados*/
 function listarEmpleados(idPostByUser, PostInIP, PostTime) {
     fetch('https://localhost:5001/api/BDController/ListarEmpleados', {
         method: 'POST',
@@ -140,89 +136,81 @@ function listarEmpleados(idPostByUser, PostInIP, PostTime) {
         });
 }
 
-//function filtrarEmpleado(busqueda, tipo) {
-//    fetch('https://localhost:5001/api/BDController/FiltrarControlador', {
-//        method: 'POST',
-//        headers: {
-//            'Content-Type': 'application/json'
-//        },
-//        body: JSON.stringify({
-//            inBusqueda: busqueda,
-//            inTipo: tipo
-//        })
-//    })
-//        .then(respuesta => {
-//            if (!respuesta.ok) throw new Error();
-//            return respuesta.json();
-//        })
-//        .then(datos => {
-//            const tbody = document.querySelector("#datosTabla");
-//            tbody.innerHTML = "";
 
-//            if (datos.length === 0) {
-//                const trInicio = document.createElement("tr");
-//                const tdNoData = document.createElement("td");
-//                tdNoData.colSpan = 5;
-//                tdNoData.textContent = "La tabla esta vacia.";
-//                trInicio.appendChild(tdNoData);
-//                tbody.appendChild(trInicio);
-//            } else {
-//                console.log(datos);
-//                datos.forEach((empleado) => {
-//                    const trInicio = document.createElement("tr");
+/*2. Listar Empleados con Filtro*/
+function filtrarEmpleado(busqueda, tipo, idPostByUser, PostInIP, PostTime) {
+    fetch('https://localhost:5001/api/BDController/FiltrarEmpleados', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            inBusqueda: busqueda,
+            inTipo: tipo,
+            idPostByUser: idPostByUser,
+            PostInIP: PostInIP,
+            PostTime: PostTime || new Date().toISOString()  
+        })
+    })
+        .then(respuesta => {
+            if (!respuesta.ok) throw new Error();
+            return respuesta.json();
+        })
+        .then(datos => {
+            const tbody = document.querySelector("#datosTabla");
+            tbody.innerHTML = "";
 
-//                    const tdNombre = document.createElement("td");
-//                    tdNombre.textContent = empleado.nombre;
-//                    tdNombre.style.cursor = "pointer";
-//                    tdNombre.style.color = "steelblue";
-//                    tdNombre.style.textDecoration = "underline";
+            if (datos.length === 0) {
+                const trInicio = document.createElement("tr");
+                const tdNoData = document.createElement("td");
+                tdNoData.colSpan = 5;
+                tdNoData.textContent = "La tabla está vacía.";
+                trInicio.appendChild(tdNoData);
+                tbody.appendChild(trInicio);
+            } else {
+                console.log(datos);
+                datos.forEach((empleado) => {
+                    const trInicio = document.createElement("tr");
 
-//                    tdNombre.addEventListener("click", () => {
-//                        const currentBackground = window.getComputedStyle(tdNombre).backgroundColor;
+                    const tdNombre = document.createElement("td");
+                    tdNombre.textContent = empleado.nombre;
+                    tdNombre.style.cursor = "pointer";
+                    tdNombre.style.color = "steelblue";
+                    tdNombre.style.textDecoration = "underline";
 
-//                        if (filaSeleccionada) {
-//                            filaSeleccionada.style.backgroundColor = "#ffffff";
-//                        }
+                    tdNombre.addEventListener("click", () => {
+                        const currentBackground = window.getComputedStyle(tdNombre).backgroundColor;
 
-//                        if (currentBackground === "rgb(187, 190, 191)") {
-//                            tdNombre.style.backgroundColor = "#ffffff";
-//                            empleadoSeleccionado = null;
-//                            filaSeleccionada = null;
-//                        } else {
-//                            tdNombre.style.backgroundColor = "#bbbebf";
-//                            empleadoSeleccionado = empleado;
-//                            filaSeleccionada = tdNombre;
-//                        }
-//                        actualizarBotones();
-//                    });
-//                    trInicio.appendChild(tdNombre);
+                        if (filaSeleccionada) {
+                            filaSeleccionada.style.backgroundColor = "#ffffff";
+                        }
 
-//                    const tdDocumento = document.createElement("td");
-//                    tdDocumento.textContent = empleado.valorDocumentoIdentidad;
-//                    trInicio.appendChild(tdDocumento);
+                        if (currentBackground === "rgb(187, 190, 191)") {
+                            tdNombre.style.backgroundColor = "#ffffff";
+                            empleadoSeleccionado = null;
+                            filaSeleccionada = null;
+                        } else {
+                            tdNombre.style.backgroundColor = "#bbbebf";
+                            empleadoSeleccionado = empleado;
+                            filaSeleccionada = tdNombre;
+                        }
+                        actualizarBotones();
+                    });
+                    trInicio.appendChild(tdNombre);
 
-//                    const tdPuesto = document.createElement("td");
-//                    tdPuesto.textContent = empleado.puesto;
-//                    trInicio.appendChild(tdPuesto);
+                    const tdPuesto = document.createElement("td");
+                    tdPuesto.textContent = empleado.puesto;
+                    trInicio.appendChild(tdPuesto);
 
-//                    const tdFecha = document.createElement("td");
-//                    const fecha = new Date(empleado.fechaContratacion);
-//                    tdFecha.textContent = fecha.toISOString().split('T')[0];
-//                    trInicio.appendChild(tdFecha);
-
-//                    const tdSaldo = document.createElement("td");
-//                    tdSaldo.textContent = empleado.saldoVacaciones;
-//                    trInicio.appendChild(tdSaldo);
-
-//                    tbody.appendChild(trInicio);
-//                });
-//            }
-//        })
-//        .catch(error => {
-//            console.log("No se muestra la tabla.");
-//            console.error(error);
-//        });
-//}
+                    tbody.appendChild(trInicio);
+                });
+            }
+        })
+        .catch(error => {
+            console.log("No se muestra la tabla.");
+            console.error(error);
+        });
+}
 
 
 
@@ -275,7 +263,7 @@ function listarEmpleados(idPostByUser, PostInIP, PostTime) {
 //            insertarBitacora(9, `${empleadoSeleccionado.valorDocumentoIdentidad.trim()}  ${empleadoSeleccionado.nombre} ${empleadoSeleccionado.puesto} ${empleadoSeleccionado.saldoVacaciones}`, parseInt(usuario.id), "25.55.61.33", new Date())
 //            alert("Eliminacion cancelada.");
 //        }
-        
+
 //    }
 //});
 
@@ -327,36 +315,16 @@ function listarEmpleados(idPostByUser, PostInIP, PostTime) {
 //        });
 //}
 
-//const insertarBitacora = (idTipoEvento, Descripcion, idPostByUser, PostInIp, PostTime) => {
-//    fetch('https://localhost:5001/api/BDController/InsertarBitacora', {
-//        method: 'POST',
-//        headers: {
-//            'Content-Type': 'application/json',
-//        },
-//        body: JSON.stringify({
-//            idTipoEvento: idTipoEvento,
-//            Descripcion: Descripcion,
-//            idPostByUser: idPostByUser,
-//            PostInIp: PostInIp,
-//            PostTime: PostTime.toISOString().split('.')[0] + "Z"
-//        }),
-//    })
-//        .then(respuesta => {
-//            if (!respuesta.ok) {
-//                return respuesta.json().then(errorDetails => {
-//                    // Aquí logueas el código de error y el mensaje para diagnosticar el problema
-//                    console.log("Código de error:", errorDetails.codigoError);
-//                    console.log("Mensaje de error:", errorDetails.message);
-//                    throw new Error(`Error: ${errorDetails.message} - Código de error: ${errorDetails.codigoError}`);
-//                });
-//            }
-//            return respuesta.json();
-//        })
-//        .catch((error) => {
-//            // Este bloque captura y muestra cualquier error que ocurra durante la solicitud
-//            console.error("Error al intentar registrar el evento:", error);
-//        });
-//}
+
+
+
+
+
+/*Le da formato a la fecha*/
+function getCurrentDateTime() {
+    const now = new Date();
+    return now.toISOString(); // Returns ISO format that C# can parse
+}
 
 
    
