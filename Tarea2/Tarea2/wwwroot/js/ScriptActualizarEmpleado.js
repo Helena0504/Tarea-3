@@ -105,7 +105,7 @@ const editarEmpleado = (id, nombre, idTipoDocumento, valorDocumento, fechaNacimi
             }
         })
         .catch(error => {
-            console.error("Error en editarEmpleado:", error);
+            console.error(("Ya existe un empelado con este nombre o documento de identidad");
             alert(error.message);
         })
         .finally(() => {

@@ -197,9 +197,11 @@ public class AccesarBD
 
 
     /*4. Insertar Empleado*/
-    public static int InsertarEmpleado(string nombre, string idTipoDocumento, string valorDocumento, DateTime fechaNacimiento, string idDepartamento, string idPuesto, bool esActivo)
+    public static int InsertarEmpleado(int idPostByUser, string postInIP, DateTime postTime,
+                            int idPuesto, int idDepartamento, int idTipoDocumento,
+                            string nombre, string valorDocumento, DateTime fechaNacimiento)
     {
-        //String de conexión a BD
+        // String de conexión a BD
         string StringConexion = "Server=25.55.61.33;" +
             "Database=Tarea3;" +
             "Trusted_Connection=True;" +
@@ -209,41 +211,42 @@ public class AccesarBD
         {
             using (SqlConnection con = new SqlConnection(StringConexion))
             {
-                //Abre conexión y se crea el comando insertar
+                // Abre conexión y se crea el comando para editar
                 con.Open();
 
-                using (SqlCommand insertar = new SqlCommand("InsertarEmpleado", con))
+                using (SqlCommand cmd = new SqlCommand("InsertarEmpleado", con))
                 {
-                    insertar.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                    //Envia parámetros de entrada
-                    insertar.Parameters.Add("@inNombre", SqlDbType.VarChar, 128).Value = nombre;
-                    insertar.Parameters.Add("@inIdTipoDocumento", SqlDbType.VarChar, 128).Value = idTipoDocumento;
-                    insertar.Parameters.Add("@inValorDocumento", SqlDbType.VarChar, 128).Value = valorDocumento;
-                    insertar.Parameters.Add("@inFechaNacimiento", SqlDbType.Date).Value = fechaNacimiento;
-                    insertar.Parameters.Add("@inIdDepartamento", SqlDbType.VarChar, 128).Value = idDepartamento;
+                    // Envía parámetros de entrada
+                    cmd.Parameters.AddWithValue("@inIdPostByUser", idPostByUser);
+                    cmd.Parameters.AddWithValue("@inPostInIP", postInIP);
+                    cmd.Parameters.AddWithValue("@inPostTime", postTime);
+                    cmd.Parameters.AddWithValue("@inIdPuesto", idPuesto);
+                    cmd.Parameters.AddWithValue("@inIdDepartamento", idDepartamento);
+                    cmd.Parameters.AddWithValue("@inIdTipoDocumento", idTipoDocumento);
+                    cmd.Parameters.AddWithValue("@inNombre", nombre);
+                    cmd.Parameters.AddWithValue("@inValorDocumento", valorDocumento);
+                    cmd.Parameters.AddWithValue("@inFechaNacimiento", fechaNacimiento);
 
-                    insertar.Parameters.Add("@inIdPuesto", SqlDbType.VarChar, 128).Value = idPuesto;
-                    insertar.Parameters.Add("@inEsActivo", SqlDbType.Bit).Value = esActivo;
-
-                    //Recibe el código de error
+                    // Recibe el código de error
                     SqlParameter outCodigoError = new SqlParameter("@outCodigoError", SqlDbType.Int)
                     {
                         Direction = ParameterDirection.Output
                     };
-                    insertar.Parameters.Add(outCodigoError);
+                    cmd.Parameters.Add(outCodigoError);
 
-                    //Se ejecuta el Stored procedure
-                    insertar.ExecuteNonQuery();
+                    // Se ejecuta el Stored Procedure
+                    cmd.ExecuteNonQuery();
 
-                    //Devuelve el código de error
+                    // Devuelve el código de error
                     return (int)outCodigoError.Value;
                 }
             }
         }
         catch (Exception ex)
         {
-            //Error en capa lógica
+            // Error en capa lógica
             Console.WriteLine($"Error al intentar conectar o ejecutar la consulta: {ex.Message}");
             Console.WriteLine($"Detalles: {ex.StackTrace}");
             return 50025;

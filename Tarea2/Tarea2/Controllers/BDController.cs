@@ -134,27 +134,53 @@ namespace Tarea2.Controllers
 
         /*4. Insertar Empleado*/
 
-        [HttpPost("InsertarControlador")]
-        public ActionResult<int> InsertarEmpleado([FromBody] Empleado empleado)
+        [HttpPost("InsertarEmpleado")]
+        public ActionResult<int> InsertarEmpleado([FromBody] InsertarRequest request)
         {
             try
             {
-                int result = AccesarBD.InsertarEmpleado(empleado.Nombre, empleado.IdTipoDocumento, empleado.ValorDocumento, empleado.FechaNacimiento, empleado.IdDepartamento, empleado.IdPuesto, empleado.EsActivo);
-                if (result == 0) // El stored procedure devuelve 0 todo está bien
+                DateTime postTime;
+                if (!DateTime.TryParse(request.PostTime, out postTime))
+                {
+                    postTime = DateTime.Now;
+                }
+
+                int result = AccesarBD.InsertarEmpleado(
+                    request.idPostByUser,
+                    request.PostInIP,
+                    postTime,
+                    request.idPuesto,
+                    request.idDepartamento,
+                    request.idTipoDocumento,
+                    request.Nombre,
+                    request.ValorDocumento,
+                    request.FechaNacimiento
+                );
+
+                if (result == 0)
                 {
                     return Ok(result);
                 }
                 else
                 {
-                    return BadRequest(new { message = "Error al insertar empleado", codigoError = result });
+                    return BadRequest(new
+                    {
+                        message = "Error al actualizar empleado",
+                        codigoError = result,
+                    });
                 }
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "Error en servidor", exception = ex.Message });
+                Console.WriteLine("Error al Actualizar Empleado: " + ex.Message);
+                return StatusCode(500, new
+                {
+                    message = "Error en servidor",
+                    exception = ex.Message,
+                    stackTrace = ex.StackTrace
+                });
             }
         }
-
 
 
 

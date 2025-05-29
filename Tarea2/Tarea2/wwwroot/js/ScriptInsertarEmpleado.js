@@ -1,218 +1,209 @@
-﻿//Acciones en html
-var usuario = JSON.parse(localStorage.getItem('usuario'));
-if (!usuario) {
-    console.log("Usuario no encontrado");
-    // Puedes redirigir o manejar el error adecuadamente
-} else {
-    console.log(usuario);
-}
-
-//Carga la tabla cuando se corre la página
+﻿/*Variables Globales, cargado de datos inicial*/
 document.addEventListener("DOMContentLoaded", function () {
-    mostrarPuesto();
-    console.log("Script.js se ha cargado correctamente");
+    var empleado = JSON.parse(localStorage.getItem('empleado'));
+    var usuario = JSON.parse(localStorage.getItem('usuario'));
+
+    document.getElementById('docId').value = empleado.valorDocumento.trim();
+    document.getElementById('nombre').value = empleado.nombre.trim();
+    document.getElementById('fechaNacimiento').value = empleado.fechaNacimiento.split('T')[0];
+
+    mostrarPuestos();
+    mostrarDepartamentos();
+    mostrarTiposDocumento();
 });
 
 
-//Si le da a botón insertar revisa el contenido de los cuadros de texto
-document.addEventListener('DOMContentLoaded', function () {
-    try {
-        const button = document.getElementById('accionInsertar');
-        button.addEventListener('click', function () {
-            document.getElementById('accionInsertar').disabled = true;
-            document.getElementById('regresarInsertarVista').disabled = true;
-            const nombre = document.getElementById('nombre').value.trim();
-            const docId = document.getElementById('docId').value.trim();
-            const puesto = document.getElementById('puesto').value.trim();
+/*Llamar a editar empleado*/
 
-            const nameRegex = /^[a-zA-Z\s\-]+$/;
-            const docRegex = /^\d{7,9}$/;
+document.getElementById('accionInsertar').addEventListener('click', function () {
+    this.disabled = true;
+    document.getElementById('regresarInsertarVista').disabled = true;
 
-            if (nombre === "") {
-                alert("No puede dejar su nombre vacío");
-            } else if (!nameRegex.test(nombre)) {
-                alert("No puede ingresar caracteres especiales en su nombre");
-            } else if (docId === "") {
-                alert("No puede dejar su documento de identificación vacío");
-            } else if (!docRegex.test(docId)) {
-                alert("Solo puede agregar números en su documento de identificación");
-            } else if (puesto === "") {
-                alert("Debe ingresar un puesto");
-            } else {
-                const fechaContratacion = new Date().toISOString().split('T')[0];
-                insertarEmpleado(puesto, docId, nombre, fechaContratacion, 0, true);
-                document.getElementById('accionInsertar').disabled = false;
-                document.getElementById('regresarInsertarVista').disabled = false;
-            }
-        });
+    const nombre = document.getElementById('nombre').value.trim();
+    const docId = document.getElementById('docId').value.trim();
+    const puesto = document.getElementById('puesto').value;
+    const departamento = document.getElementById('departamento').value;
+    const tipoDocumento = document.getElementById('tipoDocumento').value;
+    const fechaNacimiento = document.getElementById('fechaNacimiento').value;
+
+    if (!validarCampos(nombre, docId, puesto, departamento, tipoDocumento, fechaNacimiento)) {
+        this.disabled = false;
+        document.getElementById('regresarInsertarVista').disabled = false;
+        return;
     }
-    catch {
-        return (null);
-        }
+
+    const empleado = JSON.parse(localStorage.getItem('empleado'));
+    insertarEmpleado(
+        nombre,
+        parseInt(tipoDocumento),
+        docId,
+        fechaNacimiento,
+        parseInt(puesto),
+        parseInt(departamento)
+    );
 });
 
-//Si le da click a regresar vuelve a la página inicial
-document.addEventListener('DOMContentLoaded', function () {
-    try {
-        const button = document.getElementById('regresarInsertarVista');
-        button.addEventListener('click', function () {
-            window.location.href = 'VistaUsuario.html';
-        });
-    }
-    catch {
-        return (null);
-    }
+document.getElementById('regresarInsertarVista').addEventListener('click', function () {
+    window.location.href = 'VistaUsuario.html';
 });
 
 
-// Llamar a stored procedures
-const insertarEmpleado = (puesto, docId, nombre, fechaContratacion, saldoVacaciones, esActivo) => {
-    fetch('https://localhost:5001/api/BDController/InsertarControlador', {
+
+/*4. Insertar Empleado*/
+
+const insertarEmpleado = (nombre, idTipoDocumento, valorDocumento, fechaNacimiento, idPuesto, idDepartamento) => {
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+    const empleado = JSON.parse(localStorage.getItem('empleado'));
+    const postTime = new Date().toISOString();
+
+    fetch('https://localhost:5001/api/BDController/InsertarEmpleado', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            Puesto: puesto,
-            ValorDocumentoIdentidad: docId,
+            idPostByUser: usuario.id,
+            PostInIP: "25.55.61.33",
+            PostTime: postTime,
             Nombre: nombre,
-            FechaContratacion: fechaContratacion,
-            SaldoVacaciones: saldoVacaciones,
-            EsActivo: esActivo
-        }),
+            idTipoDocumento: parseInt(idTipoDocumento),
+            ValorDocumento: valorDocumento,
+            FechaNacimiento: fechaNacimiento,
+            idPuesto: parseInt(idPuesto),
+            idDepartamento: parseInt(idDepartamento)
+        })
     })
-        .then(respuesta => {
-            if (!respuesta.ok) {
-                return respuesta.json().then(errorDetails => {
-                    // Aquí logueas el código de error y el mensaje para diagnosticar el problema
-                    console.log("Código de error:", errorDetails.codigoError);
-                    console.log("Mensaje de error:", errorDetails.message);
-                    throw new Error(`Error: ${errorDetails.message} - Código de error: ${errorDetails.codigoError}`);
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(error => {
+                    console.error("Error del servidor:", error);
+                    throw new Error(error.message || "Error al actualizar empleado");
                 });
             }
-            return respuesta.json();
+            return response.json();
         })
-        .then(datos => {
-            insertarBitacora(6, `${puesto} ${docId.trim()}  ${nombre} `, parseInt(usuario.id), "25.55.61.33", new Date())
-            alert("Empleado insertado exitosamente");
-        })
-        .catch((error) => {
-            // Este bloque captura y muestra cualquier error que ocurra durante la solicitud
-            console.error("Error al intentar registrar el empleado:", error);
-            insertarBitacora(5, `Empleado con ValorDocumentoIdentidad ya existe en inserción ${puesto} ${docId.trim()}  ${nombre}`, parseInt(usuario.id), "25.55.61.33", new Date())
-            insertarBitacora(5, `Empleado con mismo nombre ya existe en inserción ${puesto} ${docId.trim()}  ${nombre}`, parseInt(usuario.id), "25.55.61.33", new Date())
-            alert("Ya existe un empleado con este documento de identidad o nombre");
-            //await manejarError(50004);
-            //await manejarError(50005);
-             });
-}
-
-
-function mostrarPuesto() {
-    fetch('https://localhost:5001/api/BDController/MostrarPuestoControlador')
-        .then(respuesta => {
-            if (!respuesta.ok) {
-                throw new Error('Error en la solicitud de puestos: ' + respuesta.statusText);
-            }
-            return respuesta.json();
-        })
-        .then(datos => {
-            const select = document.getElementById("puesto");
-            select.innerHTML = "";  // Clear existing options
-            console.log(datos);
-
-            if (datos.length === 0) {
-                const opcion = document.createElement("option");
-                opcion.textContent = "No hay puestos disponibles";
-                opcion.disabled = true;
-                opcion.selected = true;
-                select.appendChild(opcion);
+        .then(data => {
+            if (data === 0) {
+               
+                alert("Empleado insertado exitosamente");
+                window.location.href = 'VistaUsuario.html';
             } else {
-                datos.forEach(puesto => {
-                    const opcion = document.createElement("option");
-                    opcion.value = puesto.nombre;  
-                        opcion.textContent = puesto.nombre;
-                    select.appendChild(opcion);
-                });
+                throw new Error(`Error del servidor: Código ${data}`);
             }
         })
         .catch(error => {
-            console.log("Error al mostrar la lista de puestos:", error);
-        });
-}
-
-const insertarBitacora = (idTipoEvento, Descripcion, idPostByUser, PostInIp, PostTime) => {
-    fetch('https://localhost:5001/api/BDController/InsertarBitacora', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            idTipoEvento: idTipoEvento,
-            Descripcion: Descripcion,
-            idPostByUser: idPostByUser,
-            PostInIp: PostInIp,
-            PostTime: PostTime.toISOString().split('.')[0] + "Z"
-        }),
-    })
-        .then(respuesta => {
-            if (!respuesta.ok) {
-                return respuesta.json().then(errorDetails => {
-                    // Aquí logueas el código de error y el mensaje para diagnosticar el problema
-                    console.log("Código de error:", errorDetails.codigoError);
-                    console.log("Mensaje de error:", errorDetails.message);
-                    throw new Error(`Error: ${errorDetails.message} - Código de error: ${errorDetails.codigoError}`);
-                });
-            }
-            return respuesta.json();
+            console.error("Ya existe un empelado con este nombre o documento de identidad");
+            alert(error.message);
         })
-        .catch((error) => {
-            // Este bloque captura y muestra cualquier error que ocurra durante la solicitud
-            console.error("Error al intentar registrar el evento:", error);
+        .finally(() => {
+            document.getElementById('accionInsertar').disabled = false;
+            document.getElementById('regresarInsertarVista').disabled = false;
+        });
+};
+
+/*Auxiliares*/
+
+/*Validar el formato de los campos*/
+function validarCampos(nombre, docId, idPuesto, idDepartamento, idTipoDocumento, fechaNacimiento) {
+    if (!nombre || nombre.trim() === '') {
+        alert("El nombre no puede estar vacío");
+        return false;
+    }
+
+    if (!/^[a-zA-Z\s\-]+$/.test(nombre)) {
+        alert("El nombre solo puede contener letras, espacios y guiones");
+        return false;
+    }
+
+    if (!docId || docId.trim() === '') {
+        alert("El documento de identidad no puede estar vacío");
+        return false;
+    }
+
+    if (!/^\d{7,11}$/.test(docId)) {
+        alert("El documento debe tener entre 7 y 11 dígitos numéricos");
+        return false;
+    }
+
+    if (!idPuesto || idPuesto === '') {
+        alert("Debe seleccionar un puesto");
+        return false;
+    }
+
+    if (!idDepartamento || idDepartamento === '') {
+        alert("Debe seleccionar un departamento");
+        return false;
+    }
+
+    if (!idTipoDocumento || idTipoDocumento === '') {
+        alert("Debe seleccionar un tipo de documento");
+        return false;
+    }
+
+    if (!fechaNacimiento) {
+        alert("Debe ingresar una fecha de nacimiento");
+        return false;
+    }
+
+    if (isNaN(new Date(fechaNacimiento).getTime())) {
+        alert("La fecha de nacimiento no tiene un formato válido");
+        return false;
+    }
+
+    return true;
+}
+
+/*Seleccion de puestos*/
+function mostrarPuestos() {
+    fetch('https://localhost:5001/api/BDController/MostrarPuestoControlador')
+        .then(response => response.json())
+        .then(data => {
+            const select = document.getElementById("puesto");
+            select.innerHTML = '<option value="">Seleccione un puesto</option>';
+            data.forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.id;
+                option.textContent = item.nombre;
+                if (item.id === empleado.idPuesto) option.selected = true;
+                select.appendChild(option);
+            });
         });
 }
 
-const manejarError = async (codigoError) => {
-    try {
-        const response = await fetch('https://localhost:5001/api/BDController/ManejarError', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                CodigoError: codigoError
-            }),
+
+/*Seleccion de departamentos*/
+function mostrarDepartamentos() {
+    fetch('https://localhost:5001/api/BDController/MostrarDepartamentoControlador')
+        .then(response => response.json())
+        .then(data => {
+            const select = document.getElementById("departamento");
+            select.innerHTML = '<option value="">Seleccione un departamento</option>';
+            data.forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.id;
+                option.textContent = item.nombre;
+                if (item.id === empleado.idDepartamento) option.selected = true;
+                select.appendChild(option);
+            });
         });
+}
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            console.error("Error al manejar error:", errorData.message);
-            alert("Ocurrió un error al procesar el código de error");
-            return {
-                descripcion: "Error desconocido",
-                codigoError: 50005
-            };
-        }
 
-        const data = await response.json();
 
-        // Mostrar la descripción 
-        if (data.descripcion) {
-            alert(data.descripcion);
-        }
-
-        return {
-            descripcion: data.descripcion,
-            codigoError: data.codigoError || 0
-        };
-
-    } catch (error) {
-        console.error("Error en la solicitud:", error);
-        alert("Error de conexión al intentar manejar el error");
-        return {
-            descripcion: "Error de conexión",
-            codigoError: 50005
-        };
-    }
-};
+/*Seleccion de tipo de documento*/
+function mostrarTiposDocumento() {
+    fetch('https://localhost:5001/api/BDController/MostrarTipoDocControlador')
+        .then(response => response.json())
+        .then(data => {
+            const select = document.getElementById("tipoDocumento");
+            select.innerHTML = '<option value="">Seleccione un tipo</option>';
+            data.forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.id;
+                option.textContent = item.nombre;
+                if (item.id === empleado.idTipoDocumento) option.selected = true;
+                select.appendChild(option);
+            });
+        });
+}
 
