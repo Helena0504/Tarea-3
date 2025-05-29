@@ -67,22 +67,3 @@ function verificarUsuario(username, password, idPostByUser, PostInIP, PostTime) 
 }
 
 
-
-//async function CargarDatos() {
-//    try {
-//        const response = await fetch('https://localhost:5001/api/BDController/CargarControlador');
-//        const result = await response.json();
-
-//        if (!response.ok) {
-//            throw new Error(result.message || "Error en la solicitud");
-//        }
-
-//        console.log(result.message);
-
-//    } catch (error) {
-//        console.error("Error:", error);
-//        alert(error.message);
-//    }
-//}
-
-

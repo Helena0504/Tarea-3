@@ -79,6 +79,85 @@ namespace Tarea2.Controllers
             }
         }
 
+        /*3. Editar Empleado*/
+
+        [HttpPost("EditarEmpleado")]
+        public ActionResult<int> UpdateEmpleado([FromBody] EditarRequest request)
+        {
+            try
+            {
+                DateTime postTime;
+                if (!DateTime.TryParse(request.PostTime, out postTime))
+                {
+                    postTime = DateTime.Now;
+                }
+
+                int result = AccesarBD.EditarEmpleado(
+                    request.idPostByUser,
+                    request.PostInIP,
+                    postTime,
+                    request.id,
+                    request.idPuesto,
+                    request.idDepartamento,
+                    request.idTipoDocumento,
+                    request.Nombre,
+                    request.ValorDocumento,
+                    request.FechaNacimiento
+                );
+
+                if (result == 0)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(new
+                    {
+                        message = "Error al actualizar empleado",
+                        codigoError = result,
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al Actualizar Empleado: " + ex.Message);
+                return StatusCode(500, new
+                {
+                    message = "Error en servidor",
+                    exception = ex.Message,
+                    stackTrace = ex.StackTrace
+                });
+            }
+        }
+
+
+
+        /*4. Insertar Empleado*/
+
+        [HttpPost("InsertarControlador")]
+        public ActionResult<int> InsertarEmpleado([FromBody] Empleado empleado)
+        {
+            try
+            {
+                int result = AccesarBD.InsertarEmpleado(empleado.Nombre, empleado.IdTipoDocumento, empleado.ValorDocumento, empleado.FechaNacimiento, empleado.IdDepartamento, empleado.IdPuesto, empleado.EsActivo);
+                if (result == 0) // El stored procedure devuelve 0 todo está bien
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(new { message = "Error al insertar empleado", codigoError = result });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Error en servidor", exception = ex.Message });
+            }
+        }
+
+
+
+
         /*5. Eliminar Empleado*/
 
         [HttpPost("EliminarEmpleado")]
@@ -108,92 +187,6 @@ namespace Tarea2.Controllers
             }
         }
 
-
-
-
-
-
-        [HttpPost("InsertarControlador")]
-        public ActionResult<int> InsertarEmpleado([FromBody] Empleado empleado)
-        {
-            try
-            {
-                int result = AccesarBD.InsertarEmpleado(empleado.Nombre, empleado.IdTipoDocumento, empleado.ValorDocumento, empleado.FechaNacimiento, empleado.IdDepartamento, empleado.IdPuesto, empleado.EsActivo);
-                if (result == 0) // El stored procedure devuelve 0 todo está bien
-                {
-                    return Ok(result);
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error al insertar empleado", codigoError = result });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "Error en servidor", exception = ex.Message });
-            }
-        }
-
-
-
-        [HttpPost("UpdateControlador")]
-        public ActionResult<int> UpdateEmpleado([FromBody] Empleado empleado)
-        {
-            try
-            {
-                int result = AccesarBD.UpdateEmpleado(
-                    empleado.id,
-                    empleado.Nombre,
-                    empleado.IdTipoDocumento,
-                    empleado.ValorDocumento,
-                    empleado.FechaNacimiento,
-                    empleado.IdPuesto,
-                    empleado.IdDepartamento,
-                    empleado.IdPuesto,
-                    empleado.IP
-                );
-
-                if (result == 0)
-                {
-                    return Ok(result);
-                }
-                else
-                {
-                    return BadRequest(new { message = "Error al actualizar empleado", codigoError = result });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "Error en servidor", exception = ex.Message });
-            }
-        }
-
-
-        [AllowAnonymous]
-        [HttpGet("CargarControlador")]
-        public IActionResult CargarControlador()
-        {
-            try
-            {
-                int result = AccesarBD.CargarDatos();
-
-                return result switch
-                {
-                    0 => Ok(new { success = true, message = "Datos cargados exitosamente" }),
-                    1 => Ok(new { success = true, message = "Los datos ya existían" }),
-                    _ => BadRequest(new { success = false, message = $"Error al cargar datos (Código: {result})" })
-                };
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    success = false,
-                    message = "Error interno del servidor",
-                    error = ex.Message
-                });
-            }
-        }
 
 
 

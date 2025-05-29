@@ -136,52 +136,58 @@ public class AccesarBD
     }
 
 
-
-    /*5. Eliminar Empleado*/
-
-    public static int EliminarEmpleado(int idPostByUser, string PostInIP, DateTime PostTime, int id)
+    /*3. Editar Empleado*/
+    public static int EditarEmpleado(int idPostByUser, string postInIP, DateTime postTime,
+                            int id, int idPuesto, int idDepartamento, int idTipoDocumento,
+                            string nombre, string valorDocumento, DateTime fechaNacimiento)
     {
-        //String de conexión a BD
+        // String de conexión a BD
         string StringConexion = "Server=25.55.61.33;" +
             "Database=Tarea3;" +
             "Trusted_Connection=True;" +
             "TrustServerCertificate=True;";
+
         try
         {
             using (SqlConnection con = new SqlConnection(StringConexion))
             {
-                //Abre conexión y se crea el comando insertar
+                // Abre conexión y se crea el comando para editar
                 con.Open();
 
-                using (SqlCommand eliminar = new SqlCommand("EliminarEmpleado", con))
+                using (SqlCommand cmd = new SqlCommand("EditarEmpleado", con))
                 {
-                    eliminar.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                    //Envia parámetros de entrada
-                    eliminar.Parameters.AddWithValue("@inIdPostByUser", idPostByUser);
-                    eliminar.Parameters.AddWithValue("@inPostInIP", PostInIP);
-                    eliminar.Parameters.AddWithValue("@inPostTime", PostTime);
-                    eliminar.Parameters.AddWithValue("@inId", id);
+                    // Envía parámetros de entrada
+                    cmd.Parameters.AddWithValue("@inIdPostByUser", idPostByUser);
+                    cmd.Parameters.AddWithValue("@inPostInIP", postInIP);
+                    cmd.Parameters.AddWithValue("@inPostTime", postTime);
+                    cmd.Parameters.AddWithValue("@inId", id);
+                    cmd.Parameters.AddWithValue("@inIdPuesto", idPuesto);
+                    cmd.Parameters.AddWithValue("@inIdDepartamento", idDepartamento);
+                    cmd.Parameters.AddWithValue("@inIdTipoDocumento", idTipoDocumento);
+                    cmd.Parameters.AddWithValue("@inNombre", nombre);
+                    cmd.Parameters.AddWithValue("@inValorDocumento", valorDocumento);
+                    cmd.Parameters.AddWithValue("@inFechaNacimiento", fechaNacimiento);
 
-
-                    //Recibe el código de error
+                    // Recibe el código de error
                     SqlParameter outCodigoError = new SqlParameter("@outCodigoError", SqlDbType.Int)
                     {
                         Direction = ParameterDirection.Output
                     };
-                    eliminar.Parameters.Add(outCodigoError);
+                    cmd.Parameters.Add(outCodigoError);
 
-                    //Se ejecuta el Stored procedure
-                    eliminar.ExecuteNonQuery();
+                    // Se ejecuta el Stored Procedure
+                    cmd.ExecuteNonQuery();
 
-                    //Devuelve el código de error
+                    // Devuelve el código de error
                     return (int)outCodigoError.Value;
                 }
             }
         }
         catch (Exception ex)
         {
-            //Error en capa lógica
+            // Error en capa lógica
             Console.WriteLine($"Error al intentar conectar o ejecutar la consulta: {ex.Message}");
             Console.WriteLine($"Detalles: {ex.StackTrace}");
             return 50025;
@@ -190,10 +196,7 @@ public class AccesarBD
 
 
 
-
-
-
-
+    /*4. Insertar Empleado*/
     public static int InsertarEmpleado(string nombre, string idTipoDocumento, string valorDocumento, DateTime fechaNacimiento, string idDepartamento, string idPuesto, bool esActivo)
     {
         //String de conexión a BD
@@ -248,89 +251,59 @@ public class AccesarBD
     }
 
 
-    public static int UpdateEmpleado(int id, string nombre, string tipoDocumento, string valorDocumento,
-     DateTime fechaNacimiento, string puesto, string departamento, string idUsuario, string ip)
-    {
-        string StringConexion = "Server=25.55.61.33;Database=Tarea3;Trusted_Connection=True;TrustServerCertificate=True;";
 
+
+    /*5. Eliminar Empleado*/
+
+    public static int EliminarEmpleado(int idPostByUser, string PostInIP, DateTime PostTime, int id)
+    {
+        //String de conexión a BD
+        string StringConexion = "Server=25.55.61.33;" +
+            "Database=Tarea3;" +
+            "Trusted_Connection=True;" +
+            "TrustServerCertificate=True;";
         try
         {
             using (SqlConnection con = new SqlConnection(StringConexion))
             {
+                //Abre conexión y se crea el comando insertar
                 con.Open();
 
-                using (SqlCommand cmd = new SqlCommand("EditarEmpleado", con))
+                using (SqlCommand eliminar = new SqlCommand("EliminarEmpleado", con))
                 {
-                    cmd.CommandType = CommandType.StoredProcedure;
+                    eliminar.CommandType = CommandType.StoredProcedure;
 
-                    cmd.Parameters.Add("@inId", SqlDbType.Int).Value = id;
-                    cmd.Parameters.Add("@inNombre", SqlDbType.VarChar, 128).Value = nombre;
-                    cmd.Parameters.Add("@inTipoDocumento", SqlDbType.VarChar, 128).Value = tipoDocumento;
-                    cmd.Parameters.Add("@inValorDocumento", SqlDbType.VarChar, 128).Value = valorDocumento;
-                    cmd.Parameters.Add("@inFechaNacimiento", SqlDbType.Date).Value = fechaNacimiento;
-                    cmd.Parameters.Add("@inPuesto", SqlDbType.VarChar, 128).Value = puesto;
-                    cmd.Parameters.Add("@inDepartamento", SqlDbType.VarChar, 128).Value = departamento;
-                    cmd.Parameters.Add("@inIdPostByUser", SqlDbType.VarChar, 128).Value = idUsuario;
-                    cmd.Parameters.Add("@inPostInIP", SqlDbType.VarChar, 32).Value = ip;
+                    //Envia parámetros de entrada
+                    eliminar.Parameters.AddWithValue("@inIdPostByUser", idPostByUser);
+                    eliminar.Parameters.AddWithValue("@inPostInIP", PostInIP);
+                    eliminar.Parameters.AddWithValue("@inPostTime", PostTime);
+                    eliminar.Parameters.AddWithValue("@inId", id);
 
+
+                    //Recibe el código de error
                     SqlParameter outCodigoError = new SqlParameter("@outCodigoError", SqlDbType.Int)
                     {
                         Direction = ParameterDirection.Output
                     };
-                    cmd.Parameters.Add(outCodigoError);
+                    eliminar.Parameters.Add(outCodigoError);
 
-                    cmd.ExecuteNonQuery();
+                    //Se ejecuta el Stored procedure
+                    eliminar.ExecuteNonQuery();
 
+                    //Devuelve el código de error
                     return (int)outCodigoError.Value;
                 }
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
-            Console.WriteLine($"StackTrace: {ex.StackTrace}");
+            //Error en capa lógica
+            Console.WriteLine($"Error al intentar conectar o ejecutar la consulta: {ex.Message}");
+            Console.WriteLine($"Detalles: {ex.StackTrace}");
             return 50025;
         }
     }
 
-
-
-
-
-    public static int CargarDatos()
-    {
-        string StringConexion = "Server=25.55.61.33;" +
-            "Database=Tarea2;" +
-            "Trusted_Connection=True;" +
-            "TrustServerCertificate=True;";
-
-        try
-        {
-            using (var con = new SqlConnection(StringConexion))
-            {
-                con.Open();
-                using (var cmd = new SqlCommand("CargarDatos", con))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    var outParam = new SqlParameter("@outCodigoError", SqlDbType.Int)
-                    {
-                        Direction = ParameterDirection.Output
-                    };
-                    cmd.Parameters.Add(outParam);
-
-                    cmd.ExecuteNonQuery();
-
-                    return (int)outParam.Value;
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Database Error: " + ex.Message);
-            return 50005;
-        }
-    }
 
 
 

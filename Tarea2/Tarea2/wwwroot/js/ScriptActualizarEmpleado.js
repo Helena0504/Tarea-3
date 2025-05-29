@@ -1,4 +1,6 @@
-﻿document.addEventListener("DOMContentLoaded", function () {
+﻿
+/*Variables Globales, cargado de datos inicial*/
+document.addEventListener("DOMContentLoaded", function () {
     var empleado = JSON.parse(localStorage.getItem('empleado'));
     var usuario = JSON.parse(localStorage.getItem('usuario'));
 
@@ -10,6 +12,9 @@
     mostrarDepartamentos();
     mostrarTiposDocumento();
 });
+
+
+/*Llamar a editar empleado*/
 
 document.getElementById('accionInsertar').addEventListener('click', function () {
     this.disabled = true;
@@ -29,7 +34,7 @@ document.getElementById('accionInsertar').addEventListener('click', function () 
     }
 
     const empleado = JSON.parse(localStorage.getItem('empleado'));
-    updateEmpleado(
+    editarEmpleado(
         empleado.id,
         nombre,
         parseInt(tipoDocumento),
@@ -44,37 +49,124 @@ document.getElementById('regresarInsertarVista').addEventListener('click', funct
     window.location.href = 'VistaUsuario.html';
 });
 
-function validarCampos(nombre, docId, puesto, departamento, tipoDocumento, fechaNacimiento) {
-    const nameRegex = /^[a-zA-Z\s\-]+$/;
-    const docRegex = /^\d{7,9}$/;
 
-    if (!nombre || !nameRegex.test(nombre)) {
-        alert("Nombre no válido");
+
+/*3. Editar Empleado*/
+
+const editarEmpleado = (id, nombre, idTipoDocumento, valorDocumento, fechaNacimiento, idPuesto, idDepartamento) => {
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+    const empleado = JSON.parse(localStorage.getItem('empleado'));
+    const postTime = new Date().toISOString();
+
+    fetch('https://localhost:5001/api/BDController/EditarEmpleado', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            id: id,
+            idPostByUser: usuario.id,
+            PostInIP: "25.55.61.33",
+            PostTime: postTime,
+            Nombre: nombre,
+            idTipoDocumento: parseInt(idTipoDocumento),
+            ValorDocumento: valorDocumento,
+            FechaNacimiento: fechaNacimiento,
+            idPuesto: parseInt(idPuesto),
+            idDepartamento: parseInt(idDepartamento)
+        })
+    })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(error => {
+                    console.error("Error del servidor:", error);
+                    throw new Error(error.message || "Error al actualizar empleado");
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data === 0) {
+                const empleadoActualizado = {
+                    ...empleado,
+                    nombre: nombre,
+                    idTipoDocumento: parseInt(idTipoDocumento),
+                    valorDocumento: valorDocumento,
+                    fechaNacimiento: fechaNacimiento,
+                    idPuesto: parseInt(idPuesto),
+                    idDepartamento: parseInt(idDepartamento)
+                };
+                localStorage.setItem('empleado', JSON.stringify(empleadoActualizado));
+
+                alert("Empleado actualizado exitosamente");
+                window.location.href = 'VistaUsuario.html';
+            } else {
+                throw new Error(`Error del servidor: Código ${data}`);
+            }
+        })
+        .catch(error => {
+            console.error("Error en editarEmpleado:", error);
+            alert(error.message);
+        })
+        .finally(() => {
+            document.getElementById('accionInsertar').disabled = false;
+            document.getElementById('regresarInsertarVista').disabled = false;
+        });
+};
+
+/*Auxiliares*/
+
+/*Validar el formato de los campos*/
+function validarCampos(nombre, docId, idPuesto, idDepartamento, idTipoDocumento, fechaNacimiento) {
+    if (!nombre || nombre.trim() === '') {
+        alert("El nombre no puede estar vacío");
         return false;
     }
-    if (!docId || !docRegex.test(docId)) {
-        alert("Documento no válido");
+
+    if (!/^[a-zA-Z\s\-]+$/.test(nombre)) {
+        alert("El nombre solo puede contener letras, espacios y guiones");
         return false;
     }
-    if (!puesto) {
-        alert("Seleccione un puesto");
+
+    if (!docId || docId.trim() === '') {
+        alert("El documento de identidad no puede estar vacío");
         return false;
     }
-    if (!departamento) {
-        alert("Seleccione un departamento");
+
+    if (!/^\d{7,11}$/.test(docId)) {
+        alert("El documento debe tener entre 7 y 11 dígitos numéricos");
         return false;
     }
-    if (!tipoDocumento) {
-        alert("Seleccione un tipo de documento");
+
+    if (!idPuesto || idPuesto === '') {
+        alert("Debe seleccionar un puesto");
         return false;
     }
+
+    if (!idDepartamento || idDepartamento === '') {
+        alert("Debe seleccionar un departamento");
+        return false;
+    }
+
+    if (!idTipoDocumento || idTipoDocumento === '') {
+        alert("Debe seleccionar un tipo de documento");
+        return false;
+    }
+
     if (!fechaNacimiento) {
-        alert("Fecha de nacimiento requerida");
+        alert("Debe ingresar una fecha de nacimiento");
         return false;
     }
-    return true;
+
+    if (isNaN(new Date(fechaNacimiento).getTime())) {
+        alert("La fecha de nacimiento no tiene un formato válido");
+        return false;
+    }
+
+    return true; 
 }
 
+/*Seleccion de puestos*/
 function mostrarPuestos() {
     fetch('https://localhost:5001/api/BDController/MostrarPuestoControlador')
         .then(response => response.json())
@@ -91,6 +183,8 @@ function mostrarPuestos() {
         });
 }
 
+
+/*Seleccion de departamentos*/
 function mostrarDepartamentos() {
     fetch('https://localhost:5001/api/BDController/MostrarDepartamentoControlador')
         .then(response => response.json())
@@ -107,6 +201,9 @@ function mostrarDepartamentos() {
         });
 }
 
+
+
+/*Seleccion de tipo de documento*/
 function mostrarTiposDocumento() {
     fetch('https://localhost:5001/api/BDController/MostrarTipoDocControlador')
         .then(response => response.json())
@@ -123,38 +220,3 @@ function mostrarTiposDocumento() {
         });
 }
 
-const updateEmpleado = (id, nombre, tipoDocumento, valorDocumento, fechaNacimiento, puesto, departamento) => {
-    const empleado = JSON.parse(localStorage.getItem('empleado'));
-    const usuario = JSON.parse(localStorage.getItem('usuario'));
-
-    fetch('https://localhost:5001/api/BDController/UpdateControlador', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            id: id,
-            Nombre: nombre,
-            TipoDocumento: tipoDocumento,
-            ValorDocumento: valorDocumento,
-            FechaNacimiento: fechaNacimiento,
-            Puesto: puesto,
-            Departamento: departamento,
-            IdUsuario: usuario.id,
-            IP: "25.55.61.33"
-        })
-    })
-        .then(response => response.json())
-        .then(data => {
-            insertarBitacora(8, `Empleado actualizado: ${nombre}`, usuario.id, "25.55.61.33", new Date());
-            alert("Empleado actualizado exitosamente");
-            window.location.href = 'VistaUsuario.html';
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            insertarBitacora(7, `Error al actualizar empleado: ${nombre}`, usuario.id, "25.55.61.33", new Date());
-            alert("Error al actualizar empleado");
-        })
-        .finally(() => {
-            document.getElementById('accionInsertar').disabled = false;
-            document.getElementById('regresarInsertarVista').disabled = false;
-        });
-};
