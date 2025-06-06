@@ -53,86 +53,166 @@
     <TipoDeDeduccion Id="3" Nombre="Ahorro Vacacional" Obligatorio="No" Porcentual="No" Valor="0"/>
     <TipoDeDeduccion Id="4" Nombre="Pension Alimenticia" Obligatorio="No" Porcentual="No" Valor="0"/>
   </TiposDeDeduccion>
+  <Errores>
+    <Error Codigo="50001" Descripcion="Username no existe"/>
+    <Error Codigo="50002" Descripcion="Password no existe"/>
+    <Error Codigo="50003" Descripcion="Login deshabilitado"/>
+    <Error Codigo="50004" Descripcion="Empleado con ValorDocumentoIdentidad ya existe en inserción"/>
+    <Error Codigo="50005" Descripcion="Empleado con mismo nombre ya existe en inserción"/>
+    <Error Codigo="50006" Descripcion="Empleado con ValorDocumentoIdentidad ya existe en actualización"/>
+    <Error Codigo="50007" Descripcion="Empleado con mismo nombre ya existe en actualización"/>
+    <Error Codigo="50008" Descripcion="Error de base de datos"/>
+    <Error Codigo="50009" Descripcion="Nombre de empleado no alfabético"/>
+    <Error Codigo="50010" Descripcion="Valor de documento de identidad no alfabético"/>
+  </Errores>
+  <Usuarios>
+    <Usuario Id="1" Username="Goku" Password="1234" Tipo="1"/>
+    <Usuario Id="2" Username="Willy" Password="1234" Tipo="1"/>
+    <Usuario Id="3" Username="Pepe" Password="1234" Tipo="2"/>
+    <Usuario Id="4" Username="Lola" Password="1234" Tipo="2"/>
+    <Usuario Id="5" Username="SinNombre" Password="script" Tipo="3"/>
+    <Usuario Id="6" Username="emp1" Password="1234" Tipo="2"/>
+    <Usuario Id="7" Username="emp2" Password="1234" Tipo="2"/>
+    <Usuario Id="8" Username="emp3" Password="1234" Tipo="2"/>
+    <Usuario Id="9" Username="emp4" Password="1234" Tipo="2"/>
+    <Usuario Id="10" Username="emp5" Password="1234" Tipo="2"/>
+    <Usuario Id="11" Username="emp6" Password="1234" Tipo="2"/>
+    <Usuario Id="12" Username="emp7" Password="1234" Tipo="2"/>
+    <Usuario Id="13" Username="emp8" Password="1234" Tipo="2"/>
+    <Usuario Id="14" Username="emp9" Password="1234" Tipo="2"/>
+    <Usuario Id="15" Username="emp10" Password="1234" Tipo="2"/>
+    <Usuario Id="16" Username="emp11" Password="1234" Tipo="2"/>
+    <Usuario Id="17" Username="emp12" Password="1234" Tipo="2"/>
+    <Usuario Id="18" Username="emp13" Password="1234" Tipo="2"/>
+    <Usuario Id="19" Username="emp14" Password="1234" Tipo="2"/>
+    <Usuario Id="20" Username="emp15" Password="1234" Tipo="2"/>
+    <Usuario Id="21" Username="emp16" Password="1234" Tipo="2"/>
+    <Usuario Id="22" Username="emp17" Password="1234" Tipo="2"/>
+    <Usuario Id="23" Username="emp18" Password="1234" Tipo="2"/>
+    <Usuario Id="24" Username="emp19" Password="1234" Tipo="2"/>
+    <Usuario Id="25" Username="emp20" Password="1234" Tipo="2"/>
+    <Usuario Id="26" Username="emp21" Password="1234" Tipo="2"/>
+    <Usuario Id="27" Username="emp22" Password="1234" Tipo="2"/>
+    <Usuario Id="28" Username="emp23" Password="1234" Tipo="2"/>
+    <Usuario Id="29" Username="emp24" Password="1234" Tipo="2"/>
+    <Usuario Id="30" Username="emp25" Password="1234" Tipo="2"/>
+    <Usuario Id="31" Username="emp26" Password="1234" Tipo="2"/>
+    <Usuario Id="32" Username="emp27" Password="1234" Tipo="2"/>
+    <Usuario Id="33" Username="emp28" Password="1234" Tipo="2"/>
+    <Usuario Id="34" Username="emp29" Password="1234" Tipo="2"/>
+    <Usuario Id="35" Username="emp30" Password="1234" Tipo="2"/>
+    <Usuario Id="36" Username="emp31" Password="1234" Tipo="2"/>
+    <Usuario Id="37" Username="emp32" Password="1234" Tipo="2"/>
+    <Usuario Id="38" Username="emp33" Password="1234" Tipo="2"/>
+    <Usuario Id="39" Username="emp34" Password="1234" Tipo="2"/>
+    <Usuario Id="40" Username="emp35" Password="1234" Tipo="2"/>
+    <Usuario Id="41" Username="emp36" Password="1234" Tipo="2"/>
+    <Usuario Id="42" Username="emp37" Password="1234" Tipo="2"/>
+    <Usuario Id="43" Username="emp38" Password="1234" Tipo="2"/>
+    <Usuario Id="44" Username="emp39" Password="1234" Tipo="2"/>
+    <Usuario Id="45" Username="emp40" Password="1234" Tipo="2"/>
+    <Usuario Id="46" Username="emp41" Password="1234" Tipo="2"/>
+    <Usuario Id="47" Username="emp42" Password="1234" Tipo="2"/>
+    <Usuario Id="48" Username="emp43" Password="1234" Tipo="2"/>
+    <Usuario Id="49" Username="emp44" Password="1234" Tipo="2"/>
+    <Usuario Id="50" Username="emp45" Password="1234" Tipo="2"/>
+    <Usuario Id="51" Username="emp46" Password="1234" Tipo="2"/>
+    <Usuario Id="52" Username="emp47" Password="1234" Tipo="2"/>
+    <Usuario Id="53" Username="emp48" Password="1234" Tipo="2"/>
+    <Usuario Id="54" Username="emp49" Password="1234" Tipo="2"/>
+    <Usuario Id="55" Username="emp50" Password="1234" Tipo="2"/>
+    <Usuario Id="56" Username="emp51" Password="1234" Tipo="2"/>
+    <Usuario Id="57" Username="emp52" Password="1234" Tipo="2"/>
+    <Usuario Id="58" Username="emp53" Password="1234" Tipo="2"/>
+    <Usuario Id="59" Username="emp54" Password="1234" Tipo="2"/>
+    <Usuario Id="60" Username="emp55" Password="1234" Tipo="2"/>
+    <Usuario Id="61" Username="emp56" Password="1234" Tipo="2"/>
+    <Usuario Id="62" Username="emp57" Password="1234" Tipo="2"/>
+    <Usuario Id="63" Username="emp58" Password="1234" Tipo="2"/>
+    <Usuario Id="64" Username="emp59" Password="1234" Tipo="2"/>
+    <Usuario Id="65" Username="emp60" Password="1234" Tipo="2"/>
+  </Usuarios>
   <UsuariosAdministradores>
-    <Usuario pwd="1234" tipo="1" username="Goku"/>
-    <Usuario pwd="1234" tipo="1" username="Willy"/>
+    <UsuarioAdministrador IdUsuario="1"/>
+    <UsuarioAdministrador IdUsuario="2"/>
   </UsuariosAdministradores>
-  <UsuariosEmpleado>
-    <Usuario pwd="1234" tipo="2" username="Pepe"/>
-    <Usuario pwd="1234" tipo="2" username="Lola"/>
-  </UsuariosEmpleado>
   <TiposdeEvento>
-    <TipoEvento Id="1" Nombre="login"/>
-    <TipoEvento Id="2" Nombre="logout"/>
+    <TipoEvento Id="1" Nombre="Login"/>
+    <TipoEvento Id="2" Nombre="Logout"/>
     <TipoEvento Id="3" Nombre="Listar empleados"/>
     <TipoEvento Id="4" Nombre="Listar empleados con filtro"/>
     <TipoEvento Id="5" Nombre="Insertar empleado"/>
     <TipoEvento Id="6" Nombre="Eliminar empleado"/>
-    <TipoEvento Id="7" Nombre="Asociar deduccion"/>
-    <TipoEvento Id="8" Nombre="DesaAsociar deduccion"/>
-    <TipoEvento Id="9" Nombre="Consultar una planilla semanal"/>
-    <TipoEvento Id="10" Nombre="Consultar una planilla mensual"/>
+    <TipoEvento Id="7" Nombre="Editar empleado"/>
+    <TipoEvento Id="8" Nombre="Asociar deducción"/>
+    <TipoEvento Id="9" Nombre="Desasociar deducción"/>
+    <TipoEvento Id="10" Nombre="Consultar una planilla semanal"/>
+    <TipoEvento Id="11" Nombre="Consultar una planilla mensual"/>
+    <TipoEvento Id="12" Nombre="Impersonar empleado"/>
+    <TipoEvento Id="13" Nombre="Regresar a interfaz de administrador"/>
+    <TipoEvento Id="14" Nombre="Ingreso de marcas de asistencia"/>
+    <TipoEvento Id="15" Nombre="Ingreso nuevas jornadas"/>
   </TiposdeEvento>
   <Empleados>
-    <Empleado Nombre="Kathleen Johnson" IdTipoDocumento="1" ValorDocumento="4-609-412" FechaNacimiento="1975-07-17" IdDepartamento="2" IdPuesto="2" Usuario="emp1" Password="1234" Activo="1"/>
-    <Empleado Nombre="Elsie Goodman" IdTipoDocumento="1" ValorDocumento="3-455-832" FechaNacimiento="2004-08-22" IdDepartamento="1" IdPuesto="6" Usuario="emp2" Password="1234" Activo="1"/>
-    <Empleado Nombre="Geraldine Copeland" IdTipoDocumento="1" ValorDocumento="3-767-511" FechaNacimiento="1978-07-04" IdDepartamento="4" IdPuesto="4" Usuario="emp3" Password="1234" Activo="1"/>
-    <Empleado Nombre="Phillip Denger" IdTipoDocumento="1" ValorDocumento="5-417-555" FechaNacimiento="1968-02-22" IdDepartamento="1" IdPuesto="6" Usuario="emp4" Password="1234" Activo="1"/>
-    <Empleado Nombre="Walter Ross" IdTipoDocumento="1" ValorDocumento="3-153-394" FechaNacimiento="1970-03-11" IdDepartamento="3" IdPuesto="4" Usuario="emp5" Password="1234" Activo="1"/>
-    <Empleado Nombre="Brian Keo" IdTipoDocumento="1" ValorDocumento="2-682-434" FechaNacimiento="1977-04-11" IdDepartamento="4" IdPuesto="1" Usuario="emp6" Password="1234" Activo="1"/>
-    <Empleado Nombre="Teresa Leonard" IdTipoDocumento="1" ValorDocumento="1-811-408" FechaNacimiento="1980-01-05" IdDepartamento="1" IdPuesto="3" Usuario="emp7" Password="1234" Activo="1"/>
-    <Empleado Nombre="Juanita Bell" IdTipoDocumento="1" ValorDocumento="7-632-871" FechaNacimiento="1975-01-10" IdDepartamento="4" IdPuesto="5" Usuario="emp8" Password="1234" Activo="1"/>
-    <Empleado Nombre="Justin Seaberry" IdTipoDocumento="1" ValorDocumento="5-475-611" FechaNacimiento="1993-03-13" IdDepartamento="2" IdPuesto="2" Usuario="emp9" Password="1234" Activo="1"/>
-    <Empleado Nombre="Milton Taliulu" IdTipoDocumento="1" ValorDocumento="7-734-895" FechaNacimiento="1992-03-11" IdDepartamento="3" IdPuesto="5" Usuario="emp10" Password="1234" Activo="1"/>
-    <Empleado Nombre="Amber Tsutsumi" IdTipoDocumento="1" ValorDocumento="6-122-920" FechaNacimiento="1997-07-25" IdDepartamento="4" IdPuesto="1" Usuario="emp11" Password="1234" Activo="1"/>
-    <Empleado Nombre="Jill Polycarpe" IdTipoDocumento="1" ValorDocumento="1-406-297" FechaNacimiento="1980-02-21" IdDepartamento="1" IdPuesto="3" Usuario="emp12" Password="1234" Activo="1"/>
-    <Empleado Nombre="Pamela Manley" IdTipoDocumento="1" ValorDocumento="1-337-977" FechaNacimiento="1981-07-27" IdDepartamento="2" IdPuesto="5" Usuario="emp13" Password="1234" Activo="1"/>
-    <Empleado Nombre="Carol Brayboy" IdTipoDocumento="1" ValorDocumento="7-382-452" FechaNacimiento="2003-06-16" IdDepartamento="1" IdPuesto="1" Usuario="emp14" Password="1234" Activo="1"/>
-    <Empleado Nombre="Concetta Frame" IdTipoDocumento="1" ValorDocumento="4-192-359" FechaNacimiento="1975-06-10" IdDepartamento="4" IdPuesto="5" Usuario="emp15" Password="1234" Activo="1"/>
-    <Empleado Nombre="Elliot Rogers" IdTipoDocumento="1" ValorDocumento="7-971-956" FechaNacimiento="1989-07-26" IdDepartamento="1" IdPuesto="1" Usuario="emp16" Password="1234" Activo="1"/>
-    <Empleado Nombre="Craig Foster" IdTipoDocumento="1" ValorDocumento="7-531-522" FechaNacimiento="1988-05-06" IdDepartamento="4" IdPuesto="3" Usuario="emp17" Password="1234" Activo="1"/>
-    <Empleado Nombre="Nicole Corns" IdTipoDocumento="1" ValorDocumento="4-910-460" FechaNacimiento="1976-10-25" IdDepartamento="4" IdPuesto="4" Usuario="emp18" Password="1234" Activo="1"/>
-    <Empleado Nombre="James Nguyen" IdTipoDocumento="1" ValorDocumento="6-245-253" FechaNacimiento="2005-03-20" IdDepartamento="1" IdPuesto="1" Usuario="emp19" Password="1234" Activo="1"/>
-    <Empleado Nombre="Carla Brinkly" IdTipoDocumento="1" ValorDocumento="6-156-763" FechaNacimiento="1976-03-04" IdDepartamento="3" IdPuesto="1" Usuario="emp20" Password="1234" Activo="1"/>
-    <Empleado Nombre="Rolando Respress" IdTipoDocumento="1" ValorDocumento="1-312-214" FechaNacimiento="2003-12-09" IdDepartamento="4" IdPuesto="4" Usuario="emp21" Password="1234" Activo="1"/>
-    <Empleado Nombre="Helen Bates" IdTipoDocumento="1" ValorDocumento="1-541-435" FechaNacimiento="1989-03-07" IdDepartamento="4" IdPuesto="1" Usuario="emp22" Password="1234" Activo="1"/>
-    <Empleado Nombre="Mike Macintyre" IdTipoDocumento="1" ValorDocumento="3-179-907" FechaNacimiento="1980-11-08" IdDepartamento="1" IdPuesto="5" Usuario="emp23" Password="1234" Activo="1"/>
-    <Empleado Nombre="John Solis" IdTipoDocumento="1" ValorDocumento="4-180-390" FechaNacimiento="1993-02-20" IdDepartamento="1" IdPuesto="4" Usuario="emp24" Password="1234" Activo="1"/>
-    <Empleado Nombre="Lilia Ramos" IdTipoDocumento="1" ValorDocumento="1-654-838" FechaNacimiento="1998-05-01" IdDepartamento="3" IdPuesto="6" Usuario="emp25" Password="1234" Activo="1"/>
-    <Empleado Nombre="Daniel Cannon" IdTipoDocumento="1" ValorDocumento="3-491-747" FechaNacimiento="1988-01-05" IdDepartamento="1" IdPuesto="2" Usuario="emp26" Password="1234" Activo="1"/>
-    <Empleado Nombre="Mary Seidel" IdTipoDocumento="1" ValorDocumento="7-753-351" FechaNacimiento="1972-05-11" IdDepartamento="4" IdPuesto="6" Usuario="emp27" Password="1234" Activo="1"/>
-    <Empleado Nombre="Austin Guild" IdTipoDocumento="1" ValorDocumento="7-988-922" FechaNacimiento="1966-07-20" IdDepartamento="2" IdPuesto="4" Usuario="emp28" Password="1234" Activo="1"/>
-    <Empleado Nombre="Sarah Toohey" IdTipoDocumento="1" ValorDocumento="1-721-807" FechaNacimiento="1980-08-20" IdDepartamento="1" IdPuesto="6" Usuario="emp29" Password="1234" Activo="1"/>
-    <Empleado Nombre="Jessica Rose" IdTipoDocumento="1" ValorDocumento="3-726-869" FechaNacimiento="1987-04-04" IdDepartamento="3" IdPuesto="4" Usuario="emp30" Password="1234" Activo="1"/>
-    <Empleado Nombre="David Perry" IdTipoDocumento="1" ValorDocumento="2-364-344" FechaNacimiento="1996-06-22" IdDepartamento="3" IdPuesto="6" Usuario="emp31" Password="1234" Activo="1"/>
-    <Empleado Nombre="Gary Byrum" IdTipoDocumento="1" ValorDocumento="3-412-998" FechaNacimiento="1980-11-04" IdDepartamento="4" IdPuesto="2" Usuario="emp32" Password="1234" Activo="1"/>
-    <Empleado Nombre="Brandon Adams" IdTipoDocumento="1" ValorDocumento="3-593-755" FechaNacimiento="1972-10-18" IdDepartamento="4" IdPuesto="4" Usuario="emp33" Password="1234" Activo="1"/>
-    <Empleado Nombre="Bonita Wrede" IdTipoDocumento="1" ValorDocumento="3-307-788" FechaNacimiento="1987-01-12" IdDepartamento="3" IdPuesto="3" Usuario="emp34" Password="1234" Activo="1"/>
-    <Empleado Nombre="Eileen Parkinson" IdTipoDocumento="1" ValorDocumento="4-635-561" FechaNacimiento="1988-03-10" IdDepartamento="3" IdPuesto="6" Usuario="emp35" Password="1234" Activo="1"/>
-    <Empleado Nombre="Rena Bostick" IdTipoDocumento="1" ValorDocumento="6-687-732" FechaNacimiento="2002-05-03" IdDepartamento="3" IdPuesto="2" Usuario="emp36" Password="1234" Activo="1"/>
-    <Empleado Nombre="Archie Suggs" IdTipoDocumento="1" ValorDocumento="1-338-414" FechaNacimiento="2002-08-06" IdDepartamento="2" IdPuesto="3" Usuario="emp37" Password="1234" Activo="1"/>
-    <Empleado Nombre="Wade Forbes" IdTipoDocumento="1" ValorDocumento="1-770-511" FechaNacimiento="1997-08-07" IdDepartamento="4" IdPuesto="3" Usuario="emp38" Password="1234" Activo="1"/>
-    <Empleado Nombre="Anibal Shininger" IdTipoDocumento="1" ValorDocumento="1-715-332" FechaNacimiento="1980-01-18" IdDepartamento="4" IdPuesto="4" Usuario="emp39" Password="1234" Activo="1"/>
-    <Empleado Nombre="John Martinez" IdTipoDocumento="1" ValorDocumento="4-511-273" FechaNacimiento="1990-09-24" IdDepartamento="1" IdPuesto="3" Usuario="emp40" Password="1234" Activo="1"/>
-    <Empleado Nombre="John Phillips" IdTipoDocumento="1" ValorDocumento="5-822-141" FechaNacimiento="1982-04-15" IdDepartamento="1" IdPuesto="1" Usuario="emp41" Password="1234" Activo="1"/>
-    <Empleado Nombre="George Fontaine" IdTipoDocumento="1" ValorDocumento="3-829-345" FechaNacimiento="2002-04-11" IdDepartamento="1" IdPuesto="2" Usuario="emp42" Password="1234" Activo="1"/>
-    <Empleado Nombre="Sue Combs" IdTipoDocumento="1" ValorDocumento="1-318-115" FechaNacimiento="1970-01-04" IdDepartamento="2" IdPuesto="4" Usuario="emp43" Password="1234" Activo="1"/>
-    <Empleado Nombre="Robert Cox" IdTipoDocumento="1" ValorDocumento="6-293-637" FechaNacimiento="1979-07-02" IdDepartamento="2" IdPuesto="2" Usuario="emp44" Password="1234" Activo="1"/>
-    <Empleado Nombre="Patricia Helms" IdTipoDocumento="1" ValorDocumento="5-107-638" FechaNacimiento="1983-02-26" IdDepartamento="3" IdPuesto="5" Usuario="emp45" Password="1234" Activo="1"/>
-    <Empleado Nombre="Connie Sims" IdTipoDocumento="1" ValorDocumento="4-603-256" FechaNacimiento="1980-06-10" IdDepartamento="2" IdPuesto="3" Usuario="emp46" Password="1234" Activo="1"/>
-    <Empleado Nombre="Kevin Moore" IdTipoDocumento="1" ValorDocumento="5-175-868" FechaNacimiento="1969-06-27" IdDepartamento="3" IdPuesto="5" Usuario="emp47" Password="1234" Activo="1"/>
-    <Empleado Nombre="Joshua Rios" IdTipoDocumento="1" ValorDocumento="3-749-513" FechaNacimiento="1972-04-19" IdDepartamento="3" IdPuesto="6" Usuario="emp48" Password="1234" Activo="1"/>
-    <Empleado Nombre="James Jenkins" IdTipoDocumento="1" ValorDocumento="6-185-861" FechaNacimiento="2002-04-05" IdDepartamento="3" IdPuesto="5" Usuario="emp49" Password="1234" Activo="1"/>
-    <Empleado Nombre="Carolyn Dunn" IdTipoDocumento="1" ValorDocumento="4-342-894" FechaNacimiento="1974-06-27" IdDepartamento="3" IdPuesto="6" Usuario="emp50" Password="1234" Activo="1"/>
-    <Empleado Nombre="Janice Dupre" IdTipoDocumento="1" ValorDocumento="7-972-946" FechaNacimiento="1970-08-20" IdDepartamento="4" IdPuesto="2" Usuario="emp51" Password="1234" Activo="1"/>
-    <Empleado Nombre="Stuart Pangburn" IdTipoDocumento="1" ValorDocumento="2-870-169" FechaNacimiento="1968-02-08" IdDepartamento="1" IdPuesto="1" Usuario="emp52" Password="1234" Activo="1"/>
-    <Empleado Nombre="Luz Santiago" IdTipoDocumento="1" ValorDocumento="4-571-603" FechaNacimiento="1997-04-03" IdDepartamento="4" IdPuesto="3" Usuario="emp53" Password="1234" Activo="1"/>
-    <Empleado Nombre="Lanie Delosantos" IdTipoDocumento="1" ValorDocumento="5-705-271" FechaNacimiento="1992-02-01" IdDepartamento="4" IdPuesto="2" Usuario="emp54" Password="1234" Activo="1"/>
-    <Empleado Nombre="Marie Blair" IdTipoDocumento="1" ValorDocumento="6-457-740" FechaNacimiento="1978-05-06" IdDepartamento="4" IdPuesto="5" Usuario="emp55" Password="1234" Activo="1"/>
-    <Empleado Nombre="Dolores Mankel" IdTipoDocumento="1" ValorDocumento="3-945-692" FechaNacimiento="1984-12-01" IdDepartamento="1" IdPuesto="2" Usuario="emp56" Password="1234" Activo="1"/>
-    <Empleado Nombre="Carol Appleton" IdTipoDocumento="1" ValorDocumento="6-805-227" FechaNacimiento="1989-11-15" IdDepartamento="1" IdPuesto="3" Usuario="emp57" Password="1234" Activo="1"/>
-    <Empleado Nombre="Manuel Mysak" IdTipoDocumento="1" ValorDocumento="7-492-527" FechaNacimiento="1984-11-07" IdDepartamento="4" IdPuesto="6" Usuario="emp58" Password="1234" Activo="1"/>
-    <Empleado Nombre="Virginia Munos" IdTipoDocumento="1" ValorDocumento="3-780-301" FechaNacimiento="1972-08-10" IdDepartamento="3" IdPuesto="1" Usuario="emp59" Password="1234" Activo="1"/>
-    <Empleado Nombre="Stephanie Reese" IdTipoDocumento="1" ValorDocumento="2-147-805" FechaNacimiento="1979-05-22" IdDepartamento="3" IdPuesto="5" Usuario="emp60" Password="1234" Activo="1"/>
+    <Empleado Nombre="Robert Haselton" IdTipoDocumento="1" ValorDocumento="6-597-300" FechaNacimiento="1999-03-14" IdDepartamento="2" NombrePuesto="Bodeguero" IdUsuario="6" Activo="1"/>
+    <Empleado Nombre="Esther Small" IdTipoDocumento="1" ValorDocumento="6-391-420" FechaNacimiento="1976-11-17" IdDepartamento="3" NombrePuesto="Electricista" IdUsuario="7" Activo="1"/>
+    <Empleado Nombre="Shannon Sanford" IdTipoDocumento="1" ValorDocumento="3-282-754" FechaNacimiento="1971-06-17" IdDepartamento="4" NombrePuesto="Bodeguero" IdUsuario="8" Activo="1"/>
+    <Empleado Nombre="Jason Dequattro" IdTipoDocumento="1" ValorDocumento="3-897-736" FechaNacimiento="2005-03-03" IdDepartamento="4" NombrePuesto="Tecnico de Mantenimiento" IdUsuario="9" Activo="1"/>
+    <Empleado Nombre="Charles Tiano" IdTipoDocumento="1" ValorDocumento="2-988-937" FechaNacimiento="1994-06-25" IdDepartamento="3" NombrePuesto="Operador de Maquina" IdUsuario="10" Activo="1"/>
+    <Empleado Nombre="David Mathewson" IdTipoDocumento="1" ValorDocumento="2-365-848" FechaNacimiento="1985-09-10" IdDepartamento="1" NombrePuesto="Bodeguero" IdUsuario="11" Activo="1"/>
+    <Empleado Nombre="Lucille Acosta" IdTipoDocumento="1" ValorDocumento="6-325-789" FechaNacimiento="1987-02-12" IdDepartamento="3" NombrePuesto="Auxiliar de Laboratorio" IdUsuario="12" Activo="1"/>
+    <Empleado Nombre="Robert Williams" IdTipoDocumento="1" ValorDocumento="1-778-679" FechaNacimiento="1990-07-03" IdDepartamento="1" NombrePuesto="Auxiliar de Laboratorio" IdUsuario="13" Activo="1"/>
+    <Empleado Nombre="Rebeca Pina" IdTipoDocumento="1" ValorDocumento="4-227-177" FechaNacimiento="1997-05-23" IdDepartamento="2" NombrePuesto="Electricista" IdUsuario="14" Activo="1"/>
+    <Empleado Nombre="David Bristol" IdTipoDocumento="1" ValorDocumento="4-940-554" FechaNacimiento="1975-09-04" IdDepartamento="4" NombrePuesto="Tecnico de Mantenimiento" IdUsuario="15" Activo="1"/>
+    <Empleado Nombre="Dawn Burback" IdTipoDocumento="1" ValorDocumento="6-659-508" FechaNacimiento="1966-02-10" IdDepartamento="2" NombrePuesto="Bodeguero" IdUsuario="16" Activo="1"/>
+    <Empleado Nombre="Jack Johnson" IdTipoDocumento="1" ValorDocumento="2-750-530" FechaNacimiento="1986-01-15" IdDepartamento="3" NombrePuesto="Operador de Maquina" IdUsuario="17" Activo="1"/>
+    <Empleado Nombre="Frank Bekerman" IdTipoDocumento="1" ValorDocumento="7-110-681" FechaNacimiento="2002-01-03" IdDepartamento="3" NombrePuesto="Tecnico de Mantenimiento" IdUsuario="18" Activo="1"/>
+    <Empleado Nombre="Lana Robles" IdTipoDocumento="1" ValorDocumento="7-936-866" FechaNacimiento="1986-10-27" IdDepartamento="1" NombrePuesto="Tecnico de Mantenimiento" IdUsuario="19" Activo="1"/>
+    <Empleado Nombre="Elva Davis" IdTipoDocumento="1" ValorDocumento="6-256-192" FechaNacimiento="1982-01-26" IdDepartamento="3" NombrePuesto="Operador de Maquina" IdUsuario="20" Activo="1"/>
+    <Empleado Nombre="Walter Saunders" IdTipoDocumento="1" ValorDocumento="3-755-205" FechaNacimiento="1982-02-11" IdDepartamento="4" NombrePuesto="Soldador" IdUsuario="21" Activo="1"/>
+    <Empleado Nombre="Maurice Morales" IdTipoDocumento="1" ValorDocumento="1-174-548" FechaNacimiento="1994-05-27" IdDepartamento="4" NombrePuesto="Electricista" IdUsuario="22" Activo="1"/>
+    <Empleado Nombre="Consuelo Hayden" IdTipoDocumento="1" ValorDocumento="5-851-758" FechaNacimiento="1989-07-09" IdDepartamento="3" NombrePuesto="Electricista" IdUsuario="23" Activo="1"/>
+    <Empleado Nombre="Bibi Ratcliffe" IdTipoDocumento="1" ValorDocumento="6-208-484" FechaNacimiento="1974-11-06" IdDepartamento="4" NombrePuesto="Operador de Maquina" IdUsuario="24" Activo="1"/>
+    <Empleado Nombre="Justin Brown" IdTipoDocumento="1" ValorDocumento="2-282-620" FechaNacimiento="2005-12-25" IdDepartamento="2" NombrePuesto="Electricista" IdUsuario="25" Activo="1"/>
+    <Empleado Nombre="Eric Mcbride" IdTipoDocumento="1" ValorDocumento="7-687-562" FechaNacimiento="1975-07-10" IdDepartamento="1" NombrePuesto="Auxiliar de Laboratorio" IdUsuario="26" Activo="1"/>
+    <Empleado Nombre="Anthony Sewell" IdTipoDocumento="1" ValorDocumento="6-491-304" FechaNacimiento="2001-02-03" IdDepartamento="4" NombrePuesto="Electricista" IdUsuario="27" Activo="1"/>
+    <Empleado Nombre="Susan Heuser" IdTipoDocumento="1" ValorDocumento="2-594-920" FechaNacimiento="1984-08-13" IdDepartamento="3" NombrePuesto="Bodeguero" IdUsuario="28" Activo="1"/>
+    <Empleado Nombre="Salvador Tuttle" IdTipoDocumento="1" ValorDocumento="2-680-170" FechaNacimiento="1965-04-10" IdDepartamento="1" NombrePuesto="Electricista" IdUsuario="29" Activo="1"/>
+    <Empleado Nombre="Gloria Clough" IdTipoDocumento="1" ValorDocumento="2-843-183" FechaNacimiento="1965-10-11" IdDepartamento="2" NombrePuesto="Electricista" IdUsuario="30" Activo="1"/>
+    <Empleado Nombre="Christin Benoit" IdTipoDocumento="1" ValorDocumento="7-765-920" FechaNacimiento="1992-11-08" IdDepartamento="3" NombrePuesto="Auxiliar de Laboratorio" IdUsuario="31" Activo="1"/>
+    <Empleado Nombre="Margie Blaise" IdTipoDocumento="1" ValorDocumento="3-806-921" FechaNacimiento="1979-10-12" IdDepartamento="3" NombrePuesto="Operador de Maquina" IdUsuario="32" Activo="1"/>
+    <Empleado Nombre="Shirley Hayes" IdTipoDocumento="1" ValorDocumento="6-521-363" FechaNacimiento="1998-10-04" IdDepartamento="1" NombrePuesto="Soldador" IdUsuario="33" Activo="1"/>
+    <Empleado Nombre="Richard Jones" IdTipoDocumento="1" ValorDocumento="5-325-395" FechaNacimiento="1992-10-10" IdDepartamento="2" NombrePuesto="Auxiliar de Laboratorio" IdUsuario="34" Activo="1"/>
+    <Empleado Nombre="Joseph Stewart" IdTipoDocumento="1" ValorDocumento="1-209-393" FechaNacimiento="1972-04-03" IdDepartamento="4" NombrePuesto="Tecnico de Mantenimiento" IdUsuario="35" Activo="1"/>
+    <Empleado Nombre="Rita Baker" IdTipoDocumento="1" ValorDocumento="7-801-800" FechaNacimiento="1980-12-27" IdDepartamento="2" NombrePuesto="Tecnico de Mantenimiento" IdUsuario="36" Activo="1"/>
+    <Empleado Nombre="Sallie Acosta" IdTipoDocumento="1" ValorDocumento="5-233-344" FechaNacimiento="1975-11-01" IdDepartamento="3" NombrePuesto="Bodeguero" IdUsuario="37" Activo="1"/>
+    <Empleado Nombre="Nancy Berry" IdTipoDocumento="1" ValorDocumento="5-297-647" FechaNacimiento="2000-09-04" IdDepartamento="4" NombrePuesto="Operador de Maquina" IdUsuario="38" Activo="1"/>
+    <Empleado Nombre="Vera Loveland" IdTipoDocumento="1" ValorDocumento="6-520-647" FechaNacimiento="1976-07-21" IdDepartamento="1" NombrePuesto="Auxiliar de Laboratorio" IdUsuario="39" Activo="1"/>
+    <Empleado Nombre="Jack Jackson" IdTipoDocumento="1" ValorDocumento="7-532-488" FechaNacimiento="1971-02-05" IdDepartamento="3" NombrePuesto="Tecnico de Mantenimiento" IdUsuario="40" Activo="1"/>
+    <Empleado Nombre="Orpha Olson" IdTipoDocumento="1" ValorDocumento="3-760-470" FechaNacimiento="1984-03-26" IdDepartamento="1" NombrePuesto="Soldador" IdUsuario="41" Activo="1"/>
+    <Empleado Nombre="Hae Wang" IdTipoDocumento="1" ValorDocumento="6-421-973" FechaNacimiento="2004-07-28" IdDepartamento="4" NombrePuesto="Electricista" IdUsuario="42" Activo="1"/>
+    <Empleado Nombre="David Ruivo" IdTipoDocumento="1" ValorDocumento="6-730-462" FechaNacimiento="1967-06-13" IdDepartamento="3" NombrePuesto="Operador de Maquina" IdUsuario="43" Activo="1"/>
+    <Empleado Nombre="Donald Reed" IdTipoDocumento="1" ValorDocumento="5-519-364" FechaNacimiento="1971-06-16" IdDepartamento="4" NombrePuesto="Electricista" IdUsuario="44" Activo="1"/>
+    <Empleado Nombre="Leona Johnson" IdTipoDocumento="1" ValorDocumento="2-332-351" FechaNacimiento="1969-03-11" IdDepartamento="2" NombrePuesto="Soldador" IdUsuario="45" Activo="1"/>
+    <Empleado Nombre="Larue Korpal" IdTipoDocumento="1" ValorDocumento="1-846-757" FechaNacimiento="1979-01-01" IdDepartamento="4" NombrePuesto="Operador de Maquina" IdUsuario="46" Activo="1"/>
+    <Empleado Nombre="Sarah Brock" IdTipoDocumento="1" ValorDocumento="6-102-963" FechaNacimiento="1965-05-11" IdDepartamento="1" NombrePuesto="Bodeguero" IdUsuario="47" Activo="1"/>
+    <Empleado Nombre="Krystal Irvin" IdTipoDocumento="1" ValorDocumento="6-310-632" FechaNacimiento="1996-11-07" IdDepartamento="4" NombrePuesto="Soldador" IdUsuario="48" Activo="1"/>
+    <Empleado Nombre="Tina Siano" IdTipoDocumento="1" ValorDocumento="1-847-309" FechaNacimiento="1982-11-24" IdDepartamento="1" NombrePuesto="Operador de Maquina" IdUsuario="49" Activo="1"/>
+    <Empleado Nombre="Delois Gatlin" IdTipoDocumento="1" ValorDocumento="7-411-375" FechaNacimiento="1995-06-25" IdDepartamento="2" NombrePuesto="Auxiliar de Laboratorio" IdUsuario="50" Activo="1"/>
+    <Empleado Nombre="Sandra Mullen" IdTipoDocumento="1" ValorDocumento="2-627-575" FechaNacimiento="1988-05-14" IdDepartamento="3" NombrePuesto="Auxiliar de Laboratorio" IdUsuario="51" Activo="1"/>
+    <Empleado Nombre="Jason Kolar" IdTipoDocumento="1" ValorDocumento="5-430-359" FechaNacimiento="1969-06-19" IdDepartamento="3" NombrePuesto="Operador de Maquina" IdUsuario="52" Activo="1"/>
+    <Empleado Nombre="Ernestina White" IdTipoDocumento="1" ValorDocumento="1-910-713" FechaNacimiento="1978-12-15" IdDepartamento="3" NombrePuesto="Electricista" IdUsuario="53" Activo="1"/>
+    <Empleado Nombre="Maribel Brown" IdTipoDocumento="1" ValorDocumento="1-529-104" FechaNacimiento="1975-11-24" IdDepartamento="1" NombrePuesto="Auxiliar de Laboratorio" IdUsuario="54" Activo="1"/>
+    <Empleado Nombre="Esther Barrett" IdTipoDocumento="1" ValorDocumento="3-860-729" FechaNacimiento="1968-02-18" IdDepartamento="1" NombrePuesto="Soldador" IdUsuario="55" Activo="1"/>
+    <Empleado Nombre="Brad Flores" IdTipoDocumento="1" ValorDocumento="7-960-786" FechaNacimiento="1987-10-01" IdDepartamento="4" NombrePuesto="Tecnico de Mantenimiento" IdUsuario="56" Activo="1"/>
+    <Empleado Nombre="Mandy Jackson" IdTipoDocumento="1" ValorDocumento="5-403-336" FechaNacimiento="1987-10-27" IdDepartamento="2" NombrePuesto="Auxiliar de Laboratorio" IdUsuario="57" Activo="1"/>
+    <Empleado Nombre="Stephanie Franklin" IdTipoDocumento="1" ValorDocumento="5-318-463" FechaNacimiento="1989-01-04" IdDepartamento="4" NombrePuesto="Soldador" IdUsuario="58" Activo="1"/>
+    <Empleado Nombre="Patrick Bias" IdTipoDocumento="1" ValorDocumento="2-618-914" FechaNacimiento="1965-04-26" IdDepartamento="4" NombrePuesto="Bodeguero" IdUsuario="59" Activo="1"/>
+    <Empleado Nombre="Kenneth Edwards" IdTipoDocumento="1" ValorDocumento="2-363-687" FechaNacimiento="1994-09-28" IdDepartamento="3" NombrePuesto="Operador de Maquina" IdUsuario="60" Activo="1"/>
+    <Empleado Nombre="Troy Hooks" IdTipoDocumento="1" ValorDocumento="3-232-603" FechaNacimiento="1987-06-08" IdDepartamento="3" NombrePuesto="Tecnico de Mantenimiento" IdUsuario="61" Activo="1"/>
+    <Empleado Nombre="Louise Broome" IdTipoDocumento="1" ValorDocumento="6-917-526" FechaNacimiento="1996-04-14" IdDepartamento="1" NombrePuesto="Bodeguero" IdUsuario="62" Activo="1"/>
+    <Empleado Nombre="Anna Humphrey" IdTipoDocumento="1" ValorDocumento="2-842-283" FechaNacimiento="1967-01-05" IdDepartamento="4" NombrePuesto="Electricista" IdUsuario="63" Activo="1"/>
+    <Empleado Nombre="Lawrence Jones" IdTipoDocumento="1" ValorDocumento="4-139-258" FechaNacimiento="1973-01-10" IdDepartamento="4" NombrePuesto="Soldador" IdUsuario="64" Activo="1"/>
+    <Empleado Nombre="Andrew Cash" IdTipoDocumento="1" ValorDocumento="3-823-145" FechaNacimiento="1993-07-16" IdDepartamento="2" NombrePuesto="Electricista" IdUsuario="65" Activo="1"/>
   </Empleados>
 </Catalogo>
