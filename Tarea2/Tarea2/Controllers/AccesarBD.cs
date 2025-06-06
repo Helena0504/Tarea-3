@@ -40,16 +40,16 @@ public class AccesarBD
                         while (reader.Read())
                         {
                             empleados.Add(new Empleado(
-                                reader.GetInt32(0),
-                                reader.GetInt32(1),
-                                reader.GetInt32(2),
-                                reader.GetInt32(3),
-                                reader.GetString(4),
-                                reader.GetString(5),
-                                reader.GetDateTime(6).Date,
-                                reader.GetString(7),
-                                reader.GetString(8),
-                                reader.GetString(9)
+                                reader.GetInt32(0),        // id
+                                reader.GetInt32(1),        // idPuesto
+                                reader.GetInt32(2),        // idDepartamento
+                                reader.GetInt32(3),        // idTipoDocumento
+                                reader.GetString(4),       // nombre
+                                reader.GetString(5),       // valorDocumento
+                                reader.GetDateTime(6).Date,// fechaNacimiento
+                                reader.GetInt32(7),
+                                reader.GetString(8)        // puestoNombre
+
                             ));
                         }
                     }
@@ -112,9 +112,8 @@ public class AccesarBD
                                 reader.GetString(4),
                                 reader.GetString(5),
                                 reader.GetDateTime(6).Date,
-                                reader.GetString(7),
-                                reader.GetString(8),
-                                reader.GetString(9)
+                                reader.GetInt32(7),
+                                reader.GetString(8)
                             ));
                         }
                     }

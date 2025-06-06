@@ -1,12 +1,9 @@
-﻿/*Variables Globales, cargado de datos inicial*/
+﻿
+var usuario = JSON.parse(localStorage.getItem('usuario'));
+
+
+/*Variables Globales, cargado de datos inicial*/
 document.addEventListener("DOMContentLoaded", function () {
-    var empleado = JSON.parse(localStorage.getItem('empleado'));
-    var usuario = JSON.parse(localStorage.getItem('usuario'));
-
-    document.getElementById('docId').value = empleado.valorDocumento.trim();
-    document.getElementById('nombre').value = empleado.nombre.trim();
-    document.getElementById('fechaNacimiento').value = empleado.fechaNacimiento.split('T')[0];
-
     mostrarPuestos();
     mostrarDepartamentos();
     mostrarTiposDocumento();
@@ -32,7 +29,6 @@ document.getElementById('accionInsertar').addEventListener('click', function () 
         return;
     }
 
-    const empleado = JSON.parse(localStorage.getItem('empleado'));
     insertarEmpleado(
         nombre,
         parseInt(tipoDocumento),
@@ -44,7 +40,7 @@ document.getElementById('accionInsertar').addEventListener('click', function () 
 });
 
 document.getElementById('regresarInsertarVista').addEventListener('click', function () {
-    window.location.href = 'VistaUsuario.html';
+    window.location.href = 'PrincipalAdmin.html';
 });
 
 
@@ -53,7 +49,6 @@ document.getElementById('regresarInsertarVista').addEventListener('click', funct
 
 const insertarEmpleado = (nombre, idTipoDocumento, valorDocumento, fechaNacimiento, idPuesto, idDepartamento) => {
     const usuario = JSON.parse(localStorage.getItem('usuario'));
-    const empleado = JSON.parse(localStorage.getItem('empleado'));
     const postTime = new Date().toISOString();
 
     fetch('https://localhost:5001/api/BDController/InsertarEmpleado', {
@@ -86,13 +81,13 @@ const insertarEmpleado = (nombre, idTipoDocumento, valorDocumento, fechaNacimien
             if (data === 0) {
                
                 alert("Empleado insertado exitosamente");
-                window.location.href = 'VistaUsuario.html';
+                window.location.href = 'PrincipalAdmin.html';
             } else {
                 throw new Error(`Error del servidor: Código ${data}`);
             }
         })
         .catch(error => {
-            console.error("Ya existe un empelado con este nombre o documento de identidad");
+            console.error("Ya existe un empleado con este nombre o documento de identidad");
             alert(error.message);
         })
         .finally(() => {
@@ -120,7 +115,7 @@ function validarCampos(nombre, docId, idPuesto, idDepartamento, idTipoDocumento,
         return false;
     }
 
-    if (!/^\d{7,11}$/.test(docId)) {
+    if (!/^[\d-]{7,11}$/.test(docId)) {
         alert("El documento debe tener entre 7 y 11 dígitos numéricos");
         return false;
     }
@@ -155,7 +150,7 @@ function validarCampos(nombre, docId, idPuesto, idDepartamento, idTipoDocumento,
 
 /*Seleccion de puestos*/
 function mostrarPuestos() {
-    fetch('https://localhost:5001/api/BDController/MostrarPuestoControlador')
+    fetch('https://localhost:5001/api/BDController/ListarPuestos')
         .then(response => response.json())
         .then(data => {
             const select = document.getElementById("puesto");
@@ -164,7 +159,7 @@ function mostrarPuestos() {
                 const option = document.createElement("option");
                 option.value = item.id;
                 option.textContent = item.nombre;
-                if (item.id === empleado.idPuesto) option.selected = true;
+                
                 select.appendChild(option);
             });
         });
@@ -173,7 +168,7 @@ function mostrarPuestos() {
 
 /*Seleccion de departamentos*/
 function mostrarDepartamentos() {
-    fetch('https://localhost:5001/api/BDController/MostrarDepartamentoControlador')
+    fetch('https://localhost:5001/api/BDController/ListarDepartamentos')
         .then(response => response.json())
         .then(data => {
             const select = document.getElementById("departamento");
@@ -182,7 +177,7 @@ function mostrarDepartamentos() {
                 const option = document.createElement("option");
                 option.value = item.id;
                 option.textContent = item.nombre;
-                if (item.id === empleado.idDepartamento) option.selected = true;
+                
                 select.appendChild(option);
             });
         });
@@ -192,7 +187,7 @@ function mostrarDepartamentos() {
 
 /*Seleccion de tipo de documento*/
 function mostrarTiposDocumento() {
-    fetch('https://localhost:5001/api/BDController/MostrarTipoDocControlador')
+    fetch('https://localhost:5001/api/BDController/ListarTipoDocIds')
         .then(response => response.json())
         .then(data => {
             const select = document.getElementById("tipoDocumento");
@@ -201,9 +196,10 @@ function mostrarTiposDocumento() {
                 const option = document.createElement("option");
                 option.value = item.id;
                 option.textContent = item.nombre;
-                if (item.id === empleado.idTipoDocumento) option.selected = true;
+                
                 select.appendChild(option);
             });
         });
 }
+
 

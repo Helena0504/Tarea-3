@@ -1,8 +1,7 @@
-﻿
+﻿var empleado = JSON.parse(localStorage.getItem('empleado'));
+var usuario = JSON.parse(localStorage.getItem('usuario'));
 /*Variables Globales, cargado de datos inicial*/
 document.addEventListener("DOMContentLoaded", function () {
-    var empleado = JSON.parse(localStorage.getItem('empleado'));
-    var usuario = JSON.parse(localStorage.getItem('usuario'));
 
     document.getElementById('docId').value = empleado.valorDocumento.trim();
     document.getElementById('nombre').value = empleado.nombre.trim();
@@ -46,7 +45,7 @@ document.getElementById('accionInsertar').addEventListener('click', function () 
 });
 
 document.getElementById('regresarInsertarVista').addEventListener('click', function () {
-    window.location.href = 'VistaUsuario.html';
+    window.location.href = 'PrincipalAdmin.html';
 });
 
 
@@ -99,15 +98,16 @@ const editarEmpleado = (id, nombre, idTipoDocumento, valorDocumento, fechaNacimi
                 localStorage.setItem('empleado', JSON.stringify(empleadoActualizado));
 
                 alert("Empleado actualizado exitosamente");
-                window.location.href = 'VistaUsuario.html';
+                window.location.href = 'PrincipalAdmin.html';
             } else {
                 throw new Error(`Error del servidor: Código ${data}`);
             }
         })
         .catch(error => {
-            console.error(("Ya existe un empelado con este nombre o documento de identidad");
+            console.error("Ya existe un empleado con este nombre o documento de identidad");
             alert(error.message);
         })
+
         .finally(() => {
             document.getElementById('accionInsertar').disabled = false;
             document.getElementById('regresarInsertarVista').disabled = false;
@@ -133,7 +133,7 @@ function validarCampos(nombre, docId, idPuesto, idDepartamento, idTipoDocumento,
         return false;
     }
 
-    if (!/^\d{7,11}$/.test(docId)) {
+    if (!/^[\d-]{7,11}$/.test(docId)) {
         alert("El documento debe tener entre 7 y 11 dígitos numéricos");
         return false;
     }
@@ -168,7 +168,7 @@ function validarCampos(nombre, docId, idPuesto, idDepartamento, idTipoDocumento,
 
 /*Seleccion de puestos*/
 function mostrarPuestos() {
-    fetch('https://localhost:5001/api/BDController/MostrarPuestoControlador')
+    fetch('https://localhost:5001/api/BDController/ListarPuestos')
         .then(response => response.json())
         .then(data => {
             const select = document.getElementById("puesto");
@@ -186,7 +186,7 @@ function mostrarPuestos() {
 
 /*Seleccion de departamentos*/
 function mostrarDepartamentos() {
-    fetch('https://localhost:5001/api/BDController/MostrarDepartamentoControlador')
+    fetch('https://localhost:5001/api/BDController/ListarDepartamentos')
         .then(response => response.json())
         .then(data => {
             const select = document.getElementById("departamento");
@@ -205,7 +205,7 @@ function mostrarDepartamentos() {
 
 /*Seleccion de tipo de documento*/
 function mostrarTiposDocumento() {
-    fetch('https://localhost:5001/api/BDController/MostrarTipoDocControlador')
+    fetch('https://localhost:5001/api/BDController/ListarTipoDocIds')
         .then(response => response.json())
         .then(data => {
             const select = document.getElementById("tipoDocumento");

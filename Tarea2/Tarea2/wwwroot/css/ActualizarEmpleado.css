@@ -21,14 +21,14 @@ button {
 
 #accionInsertar {
     position: absolute;
-    top: 780px;
+    top: 900px;
     left: 425px;
     margin-bottom: 200px;
 }
 
 #regresarInsertarVista {
     position: absolute;
-    top: 780px;
+    top: 900px;
     left: 775px;
     margin-bottom: 150px;
 }
@@ -51,7 +51,12 @@ input[type="text"] {
     width: 30%;
     margin-left: 450px;
 }
-
+input[type="date"] {
+    width: 30%; /* ancho del input */
+    margin-left: 450px;
+    font-size: 18px;
+    box-sizing: border-box; /* para que el padding no aumente el ancho total */
+}
 
 select {
     font-size: 18px;

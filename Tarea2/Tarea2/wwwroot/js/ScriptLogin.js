@@ -1,7 +1,7 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
-    console.log("Cargando datos"); 
+    console.log("Cargando datos");
     //CargarDatos();
-    console.log("Datos Cargados"); 
+    console.log("Datos Cargados");
 
     try {
         const button = document.getElementById('hacerLogin');
@@ -10,6 +10,14 @@
                 this.disabled = true;
                 const username = document.getElementById("usuario").value.trim();
                 const password = document.getElementById("contraseña").value.trim();
+
+                // Add basic validation
+                if (!username || !password) {
+                    alert("Por favor ingrese usuario y contraseña");
+                    this.disabled = false;
+                    return;
+                }
+
                 verificarUsuario(username, password, 0, "127.0.0.1", new Date().toISOString());
             });
         }
@@ -18,8 +26,6 @@
     }
 });
 
-
-/*Auxiliares*/
 function verificarUsuario(username, password, idPostByUser, PostInIP, PostTime) {
     fetch('https://localhost:5001/api/BDController/VerificarUsuario', {
         method: 'POST',
@@ -34,29 +40,42 @@ function verificarUsuario(username, password, idPostByUser, PostInIP, PostTime) 
             PostTime: PostTime || new Date().toISOString()
         })
     })
-        .then(respuesta => {
-            if (!respuesta.ok) {
-                throw new Error(`Error HTTP: ${respuesta.status}`);
-            }
-            return respuesta.json();
-        })
-        .then(datos => {
-            if (datos === null) {
-                document.getElementById('hacerLogin').disabled = false;
-                alert("Error al intentar iniciar sesión: " + error.message);
-            } else {
-                console.log(datos);
-                localStorage.setItem('usuario', JSON.stringify(datos));
-                document.getElementById('hacerLogin').disabled = false;
+        .then(async respuesta => {
+            const textoRespuesta = await respuesta.text();  // lee la respuesta como texto plano
+            console.log('Respuesta texto:', textoRespuesta); // para ver qué hay en la respuesta
 
-                alert("¡Login exitoso! Bienvenido " + datos.username);
-                if (datos.tipo = 1) {
-                    window.location.href = 'PrincipalAdmin.html';
-                }
-                else {
-                    window.location.href = 'PrincipalEmplea.html';
-                
-                };
+            if (!respuesta.ok) {
+                // Si no es OK, lanza error con texto (si hay)
+                throw new Error(textoRespuesta || `Error HTTP: ${respuesta.status}`);
+            }
+
+            if (!textoRespuesta) {
+                throw new Error('Respuesta vacía del servidor');
+            }
+
+            // Intenta parsear el JSON solo si no está vacío
+            try {
+                return JSON.parse(textoRespuesta);
+            } catch (e) {
+                throw new Error('Respuesta no es JSON válido: ' + e.message);
+            }
+        })
+
+
+        .then(datos => {
+            if (!datos) {
+                throw new Error("Respuesta vacía del servidor");
+            }
+            localStorage.setItem('usuario', JSON.stringify(datos));
+            document.getElementById('hacerLogin').disabled = false;
+
+            alert("¡Login exitoso! Bienvenido " + datos.username);
+
+            // Fixed assignment (=) to comparison (===)
+            if (datos.tipo === 1) {
+                window.location.href = 'PrincipalAdmin.html';
+            } else {
+                window.location.href = 'PrincipalEmplea.html';
             }
         })
         .catch(error => {
@@ -65,5 +84,4 @@ function verificarUsuario(username, password, idPostByUser, PostInIP, PostTime) 
             alert("Error al intentar iniciar sesión: " + error.message);
         });
 }
-
 

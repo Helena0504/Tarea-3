@@ -62,7 +62,7 @@ document.getElementById("irInsertarEmpleado").addEventListener("click", () => {
 /*Llama a eliminar Empleados*/
 document.getElementById("eliminarBtn").addEventListener("click", () => {
     if (empleadoSeleccionado) {
-        if (confirm(`Seguro que deseas eliminar al empleado: ${empleadoSeleccionado.nombre} documento de identidad ${empleadoSeleccionado.valorDocumentoIdentidad.trim()}?`)) {
+        if (confirm(`Seguro que deseas eliminar al empleado: ${empleadoSeleccionado.nombre} documento de identidad ${empleadoSeleccionado.valorDocumento}?`)) {
             eliminarEmpleado(empleadoSeleccionado.id, parseInt(usuario.id), "127.0.0.1", new Date().toISOString());
         } else {
             alert("Eliminacion cancelada.");
@@ -184,14 +184,16 @@ function filtrarEmpleado(busqueda, tipo, idPostByUser, PostInIP, PostTime) {
         })
     })
         .then(respuesta => {
-            if (!respuesta.ok) throw new Error();
+            if (!respuesta.ok) {
+                throw new Error(`Error HTTP: ${respuesta.status}`);
+            }
             return respuesta.json();
         })
         .then(datos => {
             const tbody = document.querySelector("#datosTabla");
             tbody.innerHTML = "";
 
-            if (datos.length === 0) {
+            if (!datos || datos.length === 0) {
                 const trInicio = document.createElement("tr");
                 const tdNoData = document.createElement("td");
                 tdNoData.colSpan = 5;
@@ -204,7 +206,7 @@ function filtrarEmpleado(busqueda, tipo, idPostByUser, PostInIP, PostTime) {
                     const trInicio = document.createElement("tr");
 
                     const tdNombre = document.createElement("td");
-                    tdNombre.textContent = empleado.nombre;
+                    tdNombre.textContent = empleado.nombre || 'N/A';
                     tdNombre.style.cursor = "pointer";
                     tdNombre.style.color = "steelblue";
                     tdNombre.style.textDecoration = "underline";
@@ -212,7 +214,7 @@ function filtrarEmpleado(busqueda, tipo, idPostByUser, PostInIP, PostTime) {
                     tdNombre.addEventListener("click", () => {
                         const currentBackground = window.getComputedStyle(tdNombre).backgroundColor;
 
-                        if (filaSeleccionada) {
+                        if (filaSeleccionada && filaSeleccionada !== tdNombre) {
                             filaSeleccionada.style.backgroundColor = "#ffffff";
                         }
 
@@ -230,7 +232,7 @@ function filtrarEmpleado(busqueda, tipo, idPostByUser, PostInIP, PostTime) {
                     trInicio.appendChild(tdNombre);
 
                     const tdPuesto = document.createElement("td");
-                    tdPuesto.textContent = empleado.puesto;
+                    tdPuesto.textContent = empleado.puestoNombre || 'N/A';
                     trInicio.appendChild(tdPuesto);
 
                     tbody.appendChild(trInicio);

@@ -7,21 +7,28 @@
     <link rel="stylesheet" href="css/InsertarEmpleado.css">
 </head>
 <body>
-        <h1>Insertar Empleado</h1>
-        <form>
-            <label for="docIdLabel">Documento de Identidad:</label>
-            <input type="text" id="docId" required>
+    <h1>Insertar Empleado</h1>
+    <form>
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" required>
 
-            <label for="nombreLabel">Nombre:</label>
-            <input type="text" id="nombre">
+        <label for="tipoDocumento">Tipo de Documento:</label>
+        <select id="tipoDocumento" required></select>
 
-            <label for="puesto">Selecciona un Puesto:</label>
-            <select id="puesto" name="puesto">
-                
-            </select>
-        </form>
-        <button id="accionInsertar">Insertar</button>
-        <button id="regresarInsertarVista">Regresar</button>
+        <label for="docId">Documento de Identidad:</label>
+        <input type="text" id="docId" required>
+
+        <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+        <input type="date" id="fechaNacimiento" required>
+
+        <label for="puesto">Puesto:</label>
+        <select id="puesto" required></select>
+
+        <label for="departamento">Departamento:</label>
+        <select id="departamento" required></select>
+    </form>
+    <button id="accionInsertar">Insertar</button>
+    <button id="regresarInsertarVista">Regresar</button>
     <script src="js/ScriptInsertarEmpleado.js"></script>
 </body>
 </html>

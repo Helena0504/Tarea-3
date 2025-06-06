@@ -225,7 +225,7 @@ namespace Tarea2.Controllers
         {
             try
             {
-                DateTime postTime; /*Arreglar formato de fecha*/
+                DateTime postTime;
                 if (!DateTime.TryParse(request.PostTime, out postTime))
                 {
                     postTime = DateTime.Now;
@@ -239,12 +239,17 @@ namespace Tarea2.Controllers
                     postTime
                 );
 
+                if (usuario == null)
+                {
+                    return BadRequest(new { message = "Usuario o contraseña incorrectos" });
+                }
+
                 return Ok(usuario);
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error al verificar Usuario: " + ex.Message);
-                return StatusCode(500, "Error interno");
+                return StatusCode(500, new { message = "Error interno" });
             }
         }
 
