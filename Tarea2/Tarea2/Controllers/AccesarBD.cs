@@ -342,7 +342,7 @@ public class AccesarBD
 
                     using (SqlDataReader reader = verif.ExecuteReader())
                     {
-                        if (reader.Read()) 
+                        if (reader.Read())
                         {
                             usuario = new Usuario(
                                 reader.GetInt32(0),
@@ -553,6 +553,120 @@ public class AccesarBD
     }
 
 
+
+    /*Funcionalidades Planillas*/
+
+    /*1. Planilla Semanal*/
+    public static List<PlanillaSemanal> ConsultarPlanillaSemanal(int idEmpleado, int idPostByUser, string postInIP, DateTime postTime)
+    {
+        List<PlanillaSemanal> planillas = new List<PlanillaSemanal>();
+        string conexion = "Server=25.55.61.33;Database=Tarea3;Trusted_Connection=True;TrustServerCertificate=True;";
+
+        try
+        {
+            using (SqlConnection con = new SqlConnection(conexion))
+            {
+                con.Open();
+                using (SqlCommand cmd = new SqlCommand("ConsultarPlanillaSemanal", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@inIdEmpleado", idEmpleado);
+                    cmd.Parameters.AddWithValue("@inIdPostByUser", idPostByUser);
+                    cmd.Parameters.AddWithValue("@inPostInIP", postInIP);
+                    cmd.Parameters.AddWithValue("@inPostTime", postTime);
+
+                    SqlParameter outCod = new SqlParameter("@outCodigoError", SqlDbType.Int)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    cmd.Parameters.Add(outCod);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            planillas.Add(new PlanillaSemanal(
+                                reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2),
+                                reader.GetDecimal(3), reader.GetDecimal(4), reader.GetDecimal(5),
+                                reader.GetDecimal(6), reader.GetDecimal(7), reader.GetDecimal(8)
+                            ));
+                        }
+                    }
+
+                    int codigoError = (int)outCod.Value;
+                    if (codigoError != 0)
+                        Console.WriteLine("Error en SP ConsultarPlanillaSemanal: " + codigoError);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+        }
+        return planillas;
+    }
+
+
+
+    /*2. Planilla Mensual*/
+    public static List<PlanillaMensual> ConsultarPlanillaMensual(int idEmpleado, int idPostByUser, string postInIP, DateTime postTime)
+    {
+        string cadenaConexion = "Server=25.55.61.33;Database=Tarea3;Trusted_Connection=True;TrustServerCertificate=True;";
+        List<PlanillaMensual> planillas = new();
+
+        try
+        {
+            using SqlConnection con = new(cadenaConexion);
+            con.Open();
+            using SqlCommand cmd = new("ConsultarPlanillaMensual", con)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+
+            cmd.Parameters.AddWithValue("@inIdEmpleado", idEmpleado);
+            cmd.Parameters.AddWithValue("@inIdPostByUser", idPostByUser);
+            cmd.Parameters.AddWithValue("@inPostInIP", postInIP);
+            cmd.Parameters.AddWithValue("@inPostTime", postTime);
+
+            SqlParameter outErr = new("@outCodigoError", SqlDbType.Int) { Direction = ParameterDirection.Output };
+            cmd.Parameters.Add(outErr);
+
+            using SqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                planillas.Add(new PlanillaMensual
+                {
+                    Id = reader.GetInt32(0),
+                    IdEmpleado = reader.GetInt32(1),
+                    IdMes = reader.GetInt32(2),
+                    SalarioBruto = reader.GetDecimal(3),
+                    SalarioNeto = reader.GetDecimal(4),
+                    TotalDeducciones = reader.GetDecimal(5)
+                });
+            }
+
+            int error = (int)outErr.Value;
+            if (error != 0)
+            {
+                Console.WriteLine("Error Consultar Mensual: " + error);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Excepcion: " + ex.Message);
+        }
+
+        return planillas;
+    }
+
+
+
+
+
 }
+
+
+
 
 

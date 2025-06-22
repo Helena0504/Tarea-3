@@ -316,5 +316,52 @@ namespace Tarea2.Controllers
         }
 
 
+
+
+        /*Funcionalidades de Planillas*/
+        /*Planilla Semanal*/
+        [HttpPost("ConsultarPlanillaSemanal")]
+        public ActionResult<List<PlanillaSemanal>> ConsultarPlanillaSemanal([FromBody] EmpleadoRequest request)
+        {
+            try
+            {
+                if (!DateTime.TryParse(request.PostTime, out DateTime postTime))
+                    postTime = DateTime.Now;
+
+                var resultado = AccesarBD.ConsultarPlanillaSemanal(request.idEmpleado, request.idPostByUser, request.PostInIP, postTime);
+                return Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error en API ConsultarPlanillaSemanal: " + ex.Message);
+                return StatusCode(500, "Error interno");
+            }
+        }
+
+
+
+        /*Planilla Mensual*/
+        [HttpPost("ConsultarPlanillaMensual")]
+        public ActionResult<List<PlanillaMensual>> ConsultarPlanillaMensual([FromBody] EmpleadoRequest request)
+        {
+            try
+            {
+                DateTime parsedTime = DateTime.TryParse(request.PostTime, out var pt) ? pt : DateTime.Now;
+
+                var result = AccesarBD.ConsultarPlanillaMensual(
+                    request.idEmpleado,
+                    request.idPostByUser,
+                    request.PostInIP,
+                    parsedTime
+                );
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error API mensual: " + ex.Message);
+                return StatusCode(500, "Error interno");
+            }
+        }
     }
 }
