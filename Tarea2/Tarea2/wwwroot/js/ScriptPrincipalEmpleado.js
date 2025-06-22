@@ -9,6 +9,7 @@ let empleado = null; // ← variable global para guardar el empleado correspondi
 /* Carga cuando se corre la página */
 document.addEventListener("DOMContentLoaded", function () {
     listarEmpleados(parseInt(usuario.id), "127.0.0.1", new Date().toISOString());
+    consultarPlanillaSemanalparseInt(empleado.id),(parseInt(usuario.id), "127.0.0.1")
     console.log("Script se ha cargado correctamente");
 });
 
