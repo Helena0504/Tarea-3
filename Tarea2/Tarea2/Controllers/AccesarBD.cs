@@ -47,7 +47,7 @@ public class AccesarBD
                                 reader.GetString(4),       // nombre
                                 reader.GetString(5),       // valorDocumento
                                 reader.GetDateTime(6).Date,// fechaNacimiento
-                                reader.GetInt32(7),
+                                reader.GetInt32(7),         //idUsuario
                                 reader.GetString(8)        // puestoNombre
 
                             ));

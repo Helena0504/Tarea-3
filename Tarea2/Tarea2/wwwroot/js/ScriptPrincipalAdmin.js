@@ -72,6 +72,14 @@ document.getElementById("eliminarBtn").addEventListener("click", () => {
 });
 
 
+/*Impersona Empleado*/
+document.getElementById("impersonarEmpleadoBtn").addEventListener("click", () => {
+    if (empleadoSeleccionado) {
+        localStorage.setItem('empleado', JSON.stringify(empleadoSeleccionado));
+        localStorage.setItem('usuario', JSON.stringify(usuario));
+        window.location.href = 'ActualizarEmpleado.html';
+    }
+});
 
 /*Se hace logout*/
 document.addEventListener('DOMContentLoaded', function () {
