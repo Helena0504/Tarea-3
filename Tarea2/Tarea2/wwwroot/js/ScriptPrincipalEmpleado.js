@@ -68,51 +68,169 @@ function listarEmpleados(idPostByUser, PostInIP, PostTime) {
 
 
 /*Planilla Semanal*/
-function consultarPlanillaSemanal(idEmpleado, idPostByUser, ip, timestamp) {
-    fetch('https://localhost:5001/api/BDController/ConsultarPlanillaSemanal', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+function consultarPlanillaSemanal(idEmpleado, idPostByUser, postInIP) {
+    fetch("https://localhost:5001/api/BDController/ConsultarPlanillaSemanal", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             idEmpleado: idEmpleado,
             idPostByUser: idPostByUser,
-            PostInIP: ip,
-            PostTime: timestamp || new Date().toISOString()
+            PostInIP: postInIP,
+            PostTime: new Date().toISOString()
         })
     })
-        .then(res => res.json())
-        .then(data => {
-            const tbody = document.querySelector("#tablaPlanillaSemanal");
-            tbody.innerHTML = "";
-
-            data.forEach(planilla => {
-                const row = document.createElement("tr");
-
-                row.innerHTML = `
-                <td>${planilla.id}</td>
-                <td>${planilla.horasOrdinarias}</td>
-                <td>${planilla.horasExtra}</td>
-                <td>${planilla.horasExtraDoble}</td>
-                <td class="click-bruto" style="color:blue; cursor:pointer;">${planilla.salarioBruto.toFixed(2)}</td>
-                <td>${planilla.salarioNeto.toFixed(2)}</td>
-                <td class="click-deduccion" style="color:red; cursor:pointer;">${planilla.totalDeducciones.toFixed(2)}</td>
-            `;
-
-                row.querySelector(".click-bruto").addEventListener("click", () => {
-                    alert("Salario Bruto clicado: " + planilla.salarioBruto);
-                    // lógica adicional aquí...
-                });
-
-                row.querySelector(".click-deduccion").addEventListener("click", () => {
-                    alert("Deducciones clicadas: " + planilla.totalDeducciones);
-                    // lógica adicional aquí...
-                });
-
-                tbody.appendChild(row);
-            });
+        .then(resp => {
+            if (!resp.ok) throw new Error("Error HTTP: " + resp.status);
+            return resp.json();
         })
-        .catch(err => console.error("Error al consultar planilla semanal:", err));
+        .then(planillas => {
+            acomodarPlanillasSemanales(planillas);
+        })
+        .catch(err => {
+            console.error("Error al consultar planilla semanal:", err);
+            const tbody = document.getElementById("tablaSemanal");
+            tbody.innerHTML = `<tr><td colspan="7">Error al cargar las planillas.</td></tr>`;
+        });
 }
 
+function acomodarPlanillasSemanales(planillas) {
+    const tbody = document.getElementById("tablaSemanal");
+    tbody.innerHTML = "";
+
+    if (!planillas || planillas.length === 0) {
+        tbody.innerHTML = "<tr><td colspan='7'>No hay planillas semanales.</td></tr>";
+        return;
+    }
+
+    planillas.forEach(p => {
+        const tr = document.createElement("tr");
+
+        // Columna Semana (ID o podría ser formato FechaInicio - FechaFin si lo incluyes)
+        const tdSemana = document.createElement("td");
+        tdSemana.textContent = p.idSemana;
+
+        const tdOrdinarias = document.createElement("td");
+        tdOrdinarias.textContent = p.horasOrdinarias;
+
+        const tdExtra = document.createElement("td");
+        tdExtra.textContent = p.horasExtra;
+
+        const tdExtraDoble = document.createElement("td");
+        tdExtraDoble.textContent = p.horasExtraDoble;
+
+        // Columna Salario Bruto (clicable)
+        const tdBruto = document.createElement("td");
+        tdBruto.textContent = p.salarioBruto.toFixed(2);
+        tdBruto.style.cursor = "pointer";
+        tdBruto.style.color = "steelblue";
+        tdBruto.onclick = () => {
+            console.log("Clic en Salario Bruto:", p);
+            // Aquí puedes ejecutar acciones adicionales con p.id, p.idSemana, etc.
+        };
+
+        // Columna Total Deducciones (clicable)
+        const tdDeducciones = document.createElement("td");
+        tdDeducciones.textContent = p.totalDeducciones.toFixed(2);
+        tdDeducciones.style.cursor = "pointer";
+        tdDeducciones.style.color = "darkred";
+        tdDeducciones.onclick = () => {
+            console.log("Clic en Total Deducciones:", p);
+            // Acción específica para mostrar detalle de deducciones
+        };
+
+        const tdNeto = document.createElement("td");
+        tdNeto.textContent = p.salarioNeto.toFixed(2);
+
+        tr.appendChild(tdSemana);
+        tr.appendChild(tdOrdinarias);
+        tr.appendChild(tdExtra);
+        tr.appendChild(tdExtraDoble);
+        tr.appendChild(tdBruto);
+        tr.appendChild(tdDeducciones);
+        tr.appendChild(tdNeto);
+
+        tbody.appendChild(tr);
+    });
+}
+
+
+
+
+function consultarPlanillaMensual(idEmpleado, idPostByUser, postInIP) {
+    fetch("https://localhost:5001/api/BDController/ConsultarPlanillaMensual", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            idEmpleado: idEmpleado,
+            idPostByUser: idPostByUser,
+            PostInIP: postInIP,
+            PostTime: new Date().toISOString()
+        })
+    })
+        .then(resp => {
+            if (!resp.ok) throw new Error("Error HTTP: " + resp.status);
+            return resp.json();
+        })
+        .then(planillas => {
+            acomodarPlanillasMensuales(planillas);
+        })
+        .catch(err => {
+            console.error("Error al consultar planilla mensual:", err);
+            const tbody = document.getElementById("tablaMensual");
+            tbody.innerHTML = `<tr><td colspan="4">Error al cargar las planillas.</td></tr>`;
+        });
+}
+
+function acomodarPlanillasMensuales(planillas) {
+    const tbody = document.getElementById("tablaMensual");
+    tbody.innerHTML = "";
+
+    if (!planillas || planillas.length === 0) {
+        tbody.innerHTML = "<tr><td colspan='4'>No hay planillas mensuales.</td></tr>";
+        return;
+    }
+
+    planillas.forEach(pm => {
+        const tr = document.createElement("tr");
+
+        // Columna Mes (ID del mes)
+        const tdMes = document.createElement("td");
+        tdMes.textContent = pm.idMes;
+
+        // Columna Salario Bruto (con acción al dar clic)
+        const tdBruto = document.createElement("td");
+        tdBruto.textContent = pm.salarioBruto.toFixed(2);
+        tdBruto.style.cursor = "pointer";
+        tdBruto.style.color = "steelblue";
+        tdBruto.onclick = () => {
+            console.log("Clic en Salario Bruto:", pm);
+            // Aquí puedes ejecutar una acción específica
+        };
+
+        // Columna Total Deducciones (con acción al dar clic)
+        const tdDeducciones = document.createElement("td");
+        tdDeducciones.textContent = pm.totalDeducciones.toFixed(2);
+        tdDeducciones.style.cursor = "pointer";
+        tdDeducciones.style.color = "darkred";
+        tdDeducciones.onclick = () => {
+            console.log("Clic en Total Deducciones:", pm);
+            // Aquí puedes ejecutar una acción específica
+        };
+
+        // Columna Salario Neto
+        const tdNeto = document.createElement("td");
+        tdNeto.textContent = pm.salarioNeto.toFixed(2);
+
+        // Agregar todas las columnas a la fila
+        tr.appendChild(tdMes);
+        tr.appendChild(tdBruto);
+        tr.appendChild(tdDeducciones);
+        tr.appendChild(tdNeto);
+
+        // Agregar fila a la tabla
+        tbody.appendChild(tr);
+    });
+}
 
 
 /*Le da formato a la fecha*/
