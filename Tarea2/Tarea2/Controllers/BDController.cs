@@ -166,14 +166,14 @@ namespace Tarea2.Controllers
                 {
                     return BadRequest(new
                     {
-                        message = "Error al actualizar empleado",
+                        message = "Error al insertar empleado",
                         codigoError = result,
                     });
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error al Actualizar Empleado: " + ex.Message);
+                Console.WriteLine("Error al Insertar Empleado: " + ex.Message);
                 return StatusCode(500, new
                 {
                     message = "Error en servidor",
@@ -437,43 +437,38 @@ namespace Tarea2.Controllers
 
         /*7. Movimiento Deduccion*/
 
-        [HttpPost("ConsultarMovimientosPorDeduccion")]
-        public ActionResult<List<MovimientoPorDeduccionDetalle>> ConsultarMovimientosPorDeduccion([FromBody] MovimientoPorDeduccionRequest request)
+        [HttpPost]
+        [Route("ConsultarMovimientosPorDeduccion")]
+        public IActionResult ConsultarMovimientosPorDeduccion([FromBody] MovimientoPorDeduccionRequest request)
         {
-            try
-            {
-                if (request == null || request.IdPlanilla <= 0 || request.IdTipoDeduccion <= 0)
-                {
-                    return BadRequest(new { mensaje = "Datos de solicitud inválidos" });
-                }
+            int codigoError;
+            var resultado = AccesarBD.ConsultarMovimientosPorDeduccion(request.IdPlanilla, request.IdTipoDeduccion, out codigoError);
 
-                int codigoError;
-                var resultado = AccesarBD.ConsultarMovimientosPorDeduccion(request.IdPlanilla, request.IdTipoDeduccion, out codigoError);
+            if (codigoError != 0)
+                return BadRequest(new { mensaje = "Error en SP", codigoError });
 
-                if (codigoError != 0)
-                {
-                    string mensaje = codigoError switch
-                    {
-                        60011 => "La planilla especificada no existe",
-                        60012 => "Parámetros inválidos (NULL)",
-                        _ => $"Error en consulta: código {codigoError}"
-                    };
-                    return BadRequest(new { mensaje });
-                }
-
-                if (resultado == null || resultado.Count == 0)
-                {
-                    return Ok(new List<MovimientoPorDeduccionDetalle>());
-                }
-
-                return Ok(resultado);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { mensaje = "Error interno del servidor", detalle = ex.Message });
-            }
+            return Ok(resultado);
         }
 
+
+
+        /*8. Movimeintos Mes deduccion*/
+        [HttpPost]
+        [Route("ConsultarMovimientosPorPlanillaMensualYTipo")]
+        public IActionResult ConsultarMovimientosPorPlanillaMensualYTipo([FromBody] MovimientoPorDeduccionMensualRequest request)
+        {
+            int codigoError;
+            var resultado = AccesarBD.ConsultarMovimientosPorPlanillaMensualYTipo(
+                request.IdPlanillaMensual,
+                request.IdTipoDeduccion,
+                request.IdEmpleado,
+                out codigoError);
+
+            if (codigoError != 0)
+                return BadRequest(new { mensaje = "Error en SP", codigoError });
+
+            return Ok(resultado);
+        }
 
     }
 }

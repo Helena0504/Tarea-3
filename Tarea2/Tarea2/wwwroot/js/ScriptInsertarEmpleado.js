@@ -72,7 +72,7 @@ const insertarEmpleado = (nombre, idTipoDocumento, valorDocumento, fechaNacimien
             if (!response.ok) {
                 return response.json().then(error => {
                     console.error("Error del servidor:", error);
-                    throw new Error(error.message || "Error al actualizar empleado");
+                    throw new Error(error.message || "Error al insertar empleado");
                 });
             }
             return response.json();

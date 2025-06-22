@@ -1,7 +1,7 @@
 ﻿let usuario = JSON.parse(localStorage.getItem("usuario"));
 let empleado = JSON.parse(localStorage.getItem("empleado"));
 let idPlanilla = parseInt(localStorage.getItem("idPlanillaSeleccionada"));
-let idTipoDeduccion = parseInt(localStorage.getItem("idTipoDeduccionSeleccionada")); // Debe estar guardado previamente
+let idTipoDeduccion = parseInt(localStorage.getItem("idTipoDeduccionSeleccionada"));
 
 document.getElementById('btnRegresar').addEventListener('click', () => {
     localStorage.setItem('usuario', JSON.stringify(usuario));
@@ -11,88 +11,68 @@ document.getElementById('btnRegresar').addEventListener('click', () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-    document.addEventListener("DOMContentLoaded", () => {
-        const loader = document.getElementById('loader');
-        const usuario = JSON.parse(localStorage.getItem("usuario"));
-        const empleado = JSON.parse(localStorage.getItem("empleado"));
-        const idPlanilla = parseInt(localStorage.getItem("idPlanillaSeleccionada"));
-        const idTipoDeduccion = parseInt(localStorage.getItem("idTipoDeduccionSeleccionada"));
-
-    // Verificar si loader existe
-    if (loader) {
-        loader.style.display = 'block';
-    }
-    // Validar datos antes de hacer la petición
     if (!idPlanilla || !idTipoDeduccion) {
-        mostrarError("Faltan datos necesarios para la consulta");
+        document.querySelector("#tablaMovimientosDeduccion").innerHTML = `<tr><td colspan="5">Faltan parámetros requeridos.</td></tr>`;
         return;
     }
 
     fetch("https://localhost:5001/api/BDController/ConsultarMovimientosPorDeduccion", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${usuario.Token}` // Si usas autenticación
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             IdPlanilla: idPlanilla,
             IdTipoDeduccion: idTipoDeduccion
         })
     })
         .then(resp => {
-            if (!resp.ok) {
-                return resp.json().then(err => { throw new Error(err.mensaje || "Error en la solicitud"); });
-            }
+            if (!resp.ok) throw new Error("Error al obtener movimientos por deducción.");
             return resp.json();
         })
         .then(data => {
-            if (!data || data.length === 0) {
-                mostrarMensaje("No se encontraron movimientos para esta deducción");
+            console.log(data);
+            const tbody = document.querySelector("#tablaMovimientosDeduccion");
+            tbody.innerHTML = "";
+
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5">No hay movimientos para esta deducción.</td></tr>`;
                 return;
             }
-            renderizarMovimientos(data);
+
+            data.forEach(m => {
+                const tr = document.createElement("tr");
+
+                const tdTipoMovimiento = document.createElement("td");
+                tdTipoMovimiento.textContent = m.nombreTipoMovimiento || "N/A";
+
+                const tdNombreDeduccion = document.createElement("td");
+                tdNombreDeduccion.textContent = m.nombreDeduccion || "N/A";
+
+                const tdMonto = document.createElement("td");
+                const montoValor = typeof m.monto === "number" ? m.monto : parseFloat(m.monto || m.Monto || 0);
+                tdMonto.textContent = montoValor.toFixed(2);  // Mantenemos 2 decimales para montos
+                tdMonto.classList.add("text-right", "currency");
+
+                const tdPorcentual = document.createElement("td");
+                tdPorcentual.textContent = m.porcentual ? "Sí" : "No";
+
+                const tdPorcentaje = document.createElement("td");
+                const porcentajeValor = typeof m.porcentajeDeduccion === "number" ? m.porcentajeDeduccion :
+                    parseFloat(m.porcentajeDeduccion || m.PorcentajeDeduccion || 0);
+                tdPorcentaje.textContent = m.porcentual ?
+                    `${porcentajeValor.toFixed(3)}%` :  // 3 decimales para porcentajes
+                    porcentajeValor.toFixed(2);         // 2 decimales para valores fijos
+                tdPorcentaje.classList.add("text-right", porcentajeValor > 0 ? "positive" : "negative");
+
+                tr.appendChild(tdTipoMovimiento);
+                tr.appendChild(tdNombreDeduccion);
+                tr.appendChild(tdMonto);
+                tr.appendChild(tdPorcentual);
+                tr.appendChild(tdPorcentaje);
+
+                tbody.appendChild(tr);
+            });
         })
         .catch(err => {
-            mostrarError(err.message);
-        })
-        .finally(() => {
-            document.getElementById('loader').style.display = 'none';
+            document.querySelector("#tablaMovimientosDeduccion").innerHTML = `<tr><td colspan="5">${err.message}</td></tr>`;
         });
 });
-
-function renderizarMovimientos(movimientos) {
-    const tbody = document.querySelector("#tablaMovimientosDeduccion");
-    tbody.innerHTML = "";
-
-    movimientos.forEach(m => {
-        const tr = document.createElement("tr");
-
-        // Agregar celdas
-        const celdas = [
-            m.NombreEmpleado,
-            m.NombreTipoMovimiento,
-            m.NombreDeduccion,
-            m.Monto.toFixed(2),
-            m.Porcentual ? "Sí" : "No",
-            m.PorcentajeDeduccion.toFixed(2) + (m.Porcentual ? "%" : "")
-        ];
-
-        celdas.forEach(texto => {
-            const td = document.createElement("td");
-            td.textContent = texto;
-            tr.appendChild(td);
-        });
-
-        tbody.appendChild(tr);
-    });
-}
-
-function mostrarError(mensaje) {
-    const tbody = document.querySelector("#tablaMovimientosDeduccion");
-    tbody.innerHTML = `<tr><td colspan="6" class="error">${mensaje}</td></tr>`;
-}
-
-function mostrarMensaje(mensaje) {
-    const tbody = document.querySelector("#tablaMovimientosDeduccion");
-    tbody.innerHTML = `<tr><td colspan="6" class="info">${mensaje}</td></tr>`;
-}

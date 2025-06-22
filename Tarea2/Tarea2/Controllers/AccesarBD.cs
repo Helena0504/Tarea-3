@@ -2,6 +2,7 @@ using Microsoft.Data.SqlClient;
 using System.Collections.Generic;
 using System.Data;
 using Tarea2.Modelos;
+using Tarea2.Modelos.TuProyecto.Modelos;
 
 public class AccesarBD
 {
@@ -993,14 +994,16 @@ public class AccesarBD
     public static List<MovimientoPorDeduccionDetalle> ConsultarMovimientosPorDeduccion(int idPlanilla, int idTipoDeduccion, out int codigoError)
     {
         List<MovimientoPorDeduccionDetalle> movimientos = new();
-        string conexion = "Server=25.55.61.33;Database=Tarea3;Trusted_Connection=True;TrustServerCertificate=True;";
         codigoError = 0;
+        string conexion = "Server=25.55.61.33;Database=Tarea3;Trusted_Connection=True;TrustServerCertificate=True;";
 
         try
         {
+            Console.WriteLine("Intentando abrir conexión...");
             using (SqlConnection con = new SqlConnection(conexion))
             {
                 con.Open();
+                Console.WriteLine("Conexión abierta correctamente.");
 
                 using (SqlCommand cmd = new SqlCommand("ConsultarMovimientosPorDeduccion", con))
                 {
@@ -1020,21 +1023,94 @@ public class AccesarBD
                         while (reader.Read())
                         {
                             movimientos.Add(new MovimientoPorDeduccionDetalle(
+                                reader.GetInt32(0),     // idMovimiento
+                                reader.GetInt32(1),     // idEmpleado
+                                reader.GetString(2),    // NombreEmpleado
+                                reader.GetInt32(3),     // idTipoMovimiento
+                                reader.GetString(4),    // NombreTipoMovimiento
+                                reader.GetDecimal(5),   // Monto (posición corregida)
+                                reader.GetString(6),    // NombreDeduccion (posición corregida)
+                                reader.GetBoolean(7),   // Porcentual (posición corregida)
+                                reader.GetDecimal(8)    // PorcentajeDeduccion (posición corregida)
+                            ));
+                        }
+                    }
+
+                    if (outCod.Value == DBNull.Value)
+                    {
+                        throw new Exception("El parámetro de salida @outCodigoError es NULL");
+                    }
+
+                    codigoError = (int)outCod.Value;
+                    if (codigoError != 0)
+                    {
+                        throw new Exception($"Error en SP ConsultarMovimientosPorDeduccion: código {codigoError}");
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            codigoError = 50099;
+            Console.WriteLine("Excepción en ConsultarMovimientosPorDeduccion: " + ex.Message);
+            throw;
+        }
+
+        return movimientos;
+    }
+
+
+    /*8. Movimiento Mes Deduccion*/
+
+    public static List<MovimientoPorDeduccionMensualDetalle> ConsultarMovimientosPorPlanillaMensualYTipo(
+    int idPlanillaMensual,
+    int idTipoDeduccion,
+    int idEmpleado,
+    out int codigoError)
+    {
+        List<MovimientoPorDeduccionMensualDetalle> movimientos = new();
+        codigoError = 0;
+        string conexion = "Server=25.55.61.33;Database=Tarea3;Trusted_Connection=True;TrustServerCertificate=True;";
+
+        try
+        {
+            using (SqlConnection con = new SqlConnection(conexion))
+            {
+                con.Open();
+
+                using (SqlCommand cmd = new SqlCommand("ConsultarMovimientosPorPlanillaMensualYTipo", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@inIdPlanillaMensual", idPlanillaMensual);
+                    cmd.Parameters.AddWithValue("@inIdTipoDeduccion", idTipoDeduccion);
+                    cmd.Parameters.AddWithValue("@inIdEmpleado", idEmpleado);
+
+                    SqlParameter outCod = new SqlParameter("@outCodigoError", SqlDbType.Int)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    cmd.Parameters.Add(outCod);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            movimientos.Add(new MovimientoPorDeduccionMensualDetalle(
                                 reader.GetInt32(0),
                                 reader.GetInt32(1),
                                 reader.GetString(2),
                                 reader.GetInt32(3),
                                 reader.GetString(4),
-                                reader.GetDateTime(5),
-                                reader.GetDecimal(6),
-                                reader.GetString(7),
-                                reader.GetBoolean(8),
-                                reader.GetDecimal(9)
+                                reader.GetDecimal(5),
+                                reader.GetString(6),
+                                reader.GetBoolean(7),
+                                reader.GetDecimal(8),
+                                reader.GetInt32(9)
                             ));
                         }
                     }
 
-                    // Verificar código de error después de leer los resultados
                     codigoError = (int)outCod.Value;
                     if (codigoError != 0)
                     {
@@ -1045,8 +1121,8 @@ public class AccesarBD
         }
         catch (Exception ex)
         {
-            codigoError = 50099; // Código genérico de error
-                                 // Considera registrar el error
+            codigoError = 50099;
+            Console.WriteLine("Error en ConsultarMovimientosPorPlanillaMensualYTipo: " + ex.Message);
             return null;
         }
 

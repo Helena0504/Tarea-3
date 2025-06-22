@@ -49,12 +49,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 // Evento click en fila
                 tr.addEventListener('click', () => {
-                    localStorage.setItem('usuario', JSON.stringify(usuario));
-                    localStorage.setItem('empleado', JSON.stringify(empleado));
-                    localStorage.setItem('idPlanillaSeleccionada', idPlanilla.toString());
+                        // Guardar datos básicos
+                        localStorage.setItem('usuario', JSON.stringify(usuario));
+                        localStorage.setItem('empleado', JSON.stringify(empleado));
+                        localStorage.setItem('idPlanillaSeleccionada', idPlanilla.toString());
 
-                    // Aquí guardamos el id de la deducción seleccionada
-                    localStorage.setItem('idTipoDeduccionSeleccionada', (d.idTipoDeduccion || d.IdTipoDeduccion || d.id || d.Id).toString());
+                        // Obtener y validar el ID de deducción
+                        const idDeduccion = d.idTipoDeduccion || d.IdTipoDeduccion || d.id || d.Id;
+
+                        if (!idDeduccion) {
+                            console.error('No se encontró ID de deducción en los datos:', d);
+                            alert('No se pudo identificar la deducción seleccionada');
+                            return;
+                        }
+
+                        // Guardar ID de deducción y nombre (si está disponible)
+                        localStorage.setItem('idTipoDeduccionSeleccionada', idDeduccion.toString());
 
                     // Redirige a la página que usará esos datos
                     window.location.href = 'MovimientoDeduccion.html';

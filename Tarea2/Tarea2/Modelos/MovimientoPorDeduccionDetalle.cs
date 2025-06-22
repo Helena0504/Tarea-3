@@ -20,7 +20,6 @@
             string nombreEmpleado,
             int idTipoMovimiento,
             string nombreTipoMovimiento,
-            DateTime fecha,
             decimal monto,
             string nombreDeduccion,
             bool porcentual,
@@ -31,7 +30,6 @@
             NombreEmpleado = nombreEmpleado;
             IdTipoMovimiento = idTipoMovimiento;
             NombreTipoMovimiento = nombreTipoMovimiento;
-            Fecha = fecha;
             Monto = monto;
             NombreDeduccion = nombreDeduccion;
             Porcentual = porcentual;
