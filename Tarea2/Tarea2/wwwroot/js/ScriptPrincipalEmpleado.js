@@ -192,8 +192,12 @@ function acomodarPlanillasSemanales(planillas) {
         tdDeducciones.textContent = p.totalDeducciones.toFixed(2);
         tdDeducciones.style.cursor = "pointer";
         tdDeducciones.onclick = () => {
-            console.log("Clic en Total Deducciones:", p);
-        };
+            localStorage.setItem("idPlanillaSeleccionada", p.id);
+            console.log("idPlanillaSeleccionada guardado:", p.id);
+            localStorage.setItem("empleado", JSON.stringify(empleado));
+            localStorage.setItem('usuario', JSON.stringify(usuario));
+            window.location.href = "DeduccionesSemanales.html";
+        };;
 
         const tdNeto = document.createElement("td");
         tdNeto.textContent = p.salarioNeto.toFixed(2);
@@ -265,8 +269,12 @@ function acomodarPlanillasMensuales(planillas) {
         tdDeducciones.textContent = pm.totalDeducciones.toFixed(2);
         tdDeducciones.style.cursor = "pointer";
         tdDeducciones.onclick = () => {
-            console.log("Clic en Total Deducciones:", pm);
-        };
+            localStorage.setItem("idPlanillaSeleccionada", pm.id);
+            console.log("idPlanillaSeleccionada guardado:", pm.id);
+            localStorage.setItem("empleado", JSON.stringify(empleado));
+            localStorage.setItem('usuario', JSON.stringify(usuario));
+            window.location.href = "DeduccionesMensuales.html";
+        };;;
 
         // Columna Salario Neto
         const tdNeto = document.createElement("td");

@@ -405,41 +405,74 @@ namespace Tarea2.Controllers
         }
 
 
-
-        /*5. Consultar Deduccion Semanal*/
-        [HttpPost("ConsultarDeduccionesSemanales")]
+        /*5. Consultar Deducciones Semanales*/
+        [HttpPost]
+        [Route("ConsultarDeduccionesSemanales")]
         public IActionResult ConsultarDeduccionesSemanales([FromBody] PlanillaRequest request)
         {
             int codigoError;
-            var deducciones = DeduccionesBD.ConsultarDeduccionesSemanales(request.IdPlanilla, out codigoError);
+            var resultado = AccesarBD.ConsultarDeduccionesSemanales(request.IdPlanilla, out codigoError);
 
             if (codigoError != 0)
                 return BadRequest(new { mensaje = "Error en SP", codigoError });
 
-            return Ok(deducciones.Select(d => new {
-                d.NombreTipoDeduccion,
-                d.Monto
-            }));
+            // Retornar todo el resultado completo
+            return Ok(resultado);
         }
 
-
-        /*6. Consultar Deduccion Mensual*/
-
-        [HttpPost("ConsultarDeduccionesMensuales")]
+        /*6. Consultar Deducciones Mensuales*/
+        [HttpPost]
+        [Route("ConsultarDeduccionesMensuales")]
         public IActionResult ConsultarDeduccionesMensuales([FromBody] PlanillaRequest request)
         {
             int codigoError;
-            var deducciones = DeduccionesBD.ConsultarDeduccionesMensuales(request.IdPlanilla, out codigoError);
+            var resultado = AccesarBD.ConsultarDeduccionesMensuales(request.IdPlanilla, out codigoError);
 
             if (codigoError != 0)
                 return BadRequest(new { mensaje = "Error en SP", codigoError });
 
-            return Ok(deducciones.Select(d => new {
-                d.NombreTipoDeduccion,
-                d.Monto
-            }));
+            // Retornar todo el resultado completo
+            return Ok(resultado);
         }
 
+        /*7. Movimiento Deduccion*/
+
+        [HttpPost("ConsultarMovimientosPorDeduccion")]
+        public ActionResult<List<MovimientoPorDeduccionDetalle>> ConsultarMovimientosPorDeduccion([FromBody] MovimientoPorDeduccionRequest request)
+        {
+            try
+            {
+                if (request == null || request.IdPlanilla <= 0 || request.IdTipoDeduccion <= 0)
+                {
+                    return BadRequest(new { mensaje = "Datos de solicitud inválidos" });
+                }
+
+                int codigoError;
+                var resultado = AccesarBD.ConsultarMovimientosPorDeduccion(request.IdPlanilla, request.IdTipoDeduccion, out codigoError);
+
+                if (codigoError != 0)
+                {
+                    string mensaje = codigoError switch
+                    {
+                        60011 => "La planilla especificada no existe",
+                        60012 => "Parámetros inválidos (NULL)",
+                        _ => $"Error en consulta: código {codigoError}"
+                    };
+                    return BadRequest(new { mensaje });
+                }
+
+                if (resultado == null || resultado.Count == 0)
+                {
+                    return Ok(new List<MovimientoPorDeduccionDetalle>());
+                }
+
+                return Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensaje = "Error interno del servidor", detalle = ex.Message });
+            }
+        }
 
 
     }

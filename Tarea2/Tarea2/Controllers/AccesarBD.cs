@@ -856,109 +856,206 @@ public class AccesarBD
 
 
     /*5. Consultar Deduccion Semanal*/
-
-    public static class DeduccionesBD
+    public static List<DeduccionSemanal> ConsultarDeduccionesSemanales(int idPlanillaSemanal, out int codigoError)
     {
-        private static string conexion = "Server=25.55.61.33;Database=Tarea3;Trusted_Connection=True;TrustServerCertificate=True;";
+        List<DeduccionSemanal> deducciones = new();
+        codigoError = 0;
+        string conexion = "Server=25.55.61.33;Database=Tarea3;Trusted_Connection=True;TrustServerCertificate=True;";
 
-        public static List<DeduccionSemanal> ConsultarDeduccionesSemanales(int idPlanillaSemanal, out int codigoError)
+        try
         {
-            List<DeduccionSemanal> deducciones = new();
-            codigoError = 0;
-
-            try
+            Console.WriteLine("Intentando abrir conexión...");
+            using (SqlConnection con = new SqlConnection(conexion))
             {
-                using SqlConnection con = new SqlConnection(conexion);
                 con.Open();
+                Console.WriteLine("Conexión abierta correctamente.");
 
-                using SqlCommand cmd = new SqlCommand("ConsultarDeduccionesSemanal", con)
+                using (SqlCommand cmd = new SqlCommand("ConsultarDeduccionesSemanal", con))
                 {
-                    CommandType = CommandType.StoredProcedure
-                };
-                cmd.Parameters.AddWithValue("@inIdPlanillaSemanal", idPlanillaSemanal);
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                SqlParameter outCod = new("@outCodigoError", SqlDbType.Int)
-                {
-                    Direction = ParameterDirection.Output
-                };
-                cmd.Parameters.Add(outCod);
+                    cmd.Parameters.AddWithValue("@inIdPlanillaSemanal", idPlanillaSemanal);
 
-                using SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    deducciones.Add(new DeduccionSemanal(
-                        reader.GetInt32(0),
-                        reader.GetInt32(1),
-                        reader.GetInt32(2),
-                        reader.GetString(3),
-                        reader.IsDBNull(4) ? null : (float?)reader.GetFloat(4),
-                        reader.GetDecimal(5)
-                    ));
+                    SqlParameter outCod = new SqlParameter("@outCodigoError", SqlDbType.Int)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    cmd.Parameters.Add(outCod);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            deducciones.Add(new DeduccionSemanal
+                            (
+                                reader.GetInt32(0),
+                                reader.GetInt32(1),
+                                reader.GetInt32(2),
+                                reader.GetString(3),
+                                reader.IsDBNull(4) ? null : (float?)reader.GetFloat(4),
+                                reader.GetDecimal(5)
+                            ));
+                        }
+                    }
+
+                    if (outCod.Value == DBNull.Value)
+                    {
+                        throw new Exception("El parámetro de salida @outCodigoError es NULL");
+                    }
+
+                    codigoError = (int)outCod.Value;
+                    if (codigoError != 0)
+                    {
+                        throw new Exception($"Error en SP ConsultarDeduccionesSemanal: código {codigoError}");
+                    }
                 }
-
-                codigoError = (int)outCod.Value;
             }
-            catch (Exception ex)
-            {
-                codigoError = 50099;
-                Console.WriteLine($"Error ConsultarDeduccionesSemanales: {ex.Message}");
-            }
-
-            return deducciones;
+        }
+        catch (Exception ex)
+        {
+            codigoError = 50099;
+            Console.WriteLine("Excepción en ConsultarDeduccionesSemanales: " + ex.Message);
+            throw;  // relanza la excepción para que sea manejada por el controlador
         }
 
+        return deducciones;
+    }
 
-        /*6. Consultar Deduccion Mensual*/
-        public static List<DeduccionMensual> ConsultarDeduccionesMensuales(int idPlanillaMensual, out int codigoError)
+    /*6. Consultar Deduccion Mensual*/
+    public static List<DeduccionMensual> ConsultarDeduccionesMensuales(int idPlanillaMensual, out int codigoError)
+    {
+        List<DeduccionMensual> deducciones = new();
+        codigoError = 0;
+        string conexion = "Server=25.55.61.33;Database=Tarea3;Trusted_Connection=True;TrustServerCertificate=True;";
+
+        try
         {
-            List<DeduccionMensual> deducciones = new();
-            codigoError = 0;
-
-            try
+            Console.WriteLine("Intentando abrir conexión...");
+            using (SqlConnection con = new SqlConnection(conexion))
             {
-                using SqlConnection con = new SqlConnection(conexion);
                 con.Open();
+                Console.WriteLine("Conexión abierta correctamente.");
 
-                using SqlCommand cmd = new SqlCommand("ConsultarDeduccionesMensual", con)
+                using (SqlCommand cmd = new SqlCommand("ConsultarDeduccionesMensual", con))
                 {
-                    CommandType = CommandType.StoredProcedure
-                };
-                cmd.Parameters.AddWithValue("@inIdPlanillaMensual", idPlanillaMensual);
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                SqlParameter outCod = new("@outCodigoError", SqlDbType.Int)
-                {
-                    Direction = ParameterDirection.Output
-                };
-                cmd.Parameters.Add(outCod);
+                    cmd.Parameters.AddWithValue("@inIdPlanillaMensual", idPlanillaMensual);
 
-                using SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    deducciones.Add(new DeduccionMensual(
-                        reader.GetInt32(0),
-                        reader.GetInt32(1),
-                        reader.GetInt32(2),
-                        reader.GetString(3),
-                        reader.IsDBNull(4) ? null : (float?)reader.GetFloat(4),
-                        reader.GetDecimal(5)
-                    ));
+                    SqlParameter outCod = new SqlParameter("@outCodigoError", SqlDbType.Int)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    cmd.Parameters.Add(outCod);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            deducciones.Add(new DeduccionMensual
+                            (
+                                reader.GetInt32(0),
+                                reader.GetInt32(1),
+                                reader.GetInt32(2),
+                                reader.GetString(3),
+                                reader.IsDBNull(4) ? null : (float?)reader.GetFloat(4),
+                                reader.GetDecimal(5)
+                            ));
+                        }
+                    }
+
+                    if (outCod.Value == DBNull.Value)
+                    {
+                        throw new Exception("El parámetro de salida @outCodigoError es NULL");
+                    }
+
+                    codigoError = (int)outCod.Value;
+                    if (codigoError != 0)
+                    {
+                        throw new Exception($"Error en SP ConsultarDeduccionesMensual: código {codigoError}");
+                    }
                 }
-
-                codigoError = (int)outCod.Value;
             }
-            catch (Exception ex)
-            {
-                codigoError = 50099;
-                Console.WriteLine($"Error ConsultarDeduccionesMensuales: {ex.Message}");
-            }
-
-            return deducciones;
         }
+        catch (Exception ex)
+        {
+            codigoError = 50099;
+            Console.WriteLine("Excepción en ConsultarDeduccionesMensuales: " + ex.Message);
+            throw;
+        }
+
+        return deducciones;
     }
 
 
 
+    /*7. Movimiento Deduccion*/
+    public static List<MovimientoPorDeduccionDetalle> ConsultarMovimientosPorDeduccion(int idPlanilla, int idTipoDeduccion, out int codigoError)
+    {
+        List<MovimientoPorDeduccionDetalle> movimientos = new();
+        string conexion = "Server=25.55.61.33;Database=Tarea3;Trusted_Connection=True;TrustServerCertificate=True;";
+        codigoError = 0;
+
+        try
+        {
+            using (SqlConnection con = new SqlConnection(conexion))
+            {
+                con.Open();
+
+                using (SqlCommand cmd = new SqlCommand("ConsultarMovimientosPorDeduccion", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@inIdPlanilla", idPlanilla);
+                    cmd.Parameters.AddWithValue("@inIdTipoDeduccion", idTipoDeduccion);
+
+                    SqlParameter outCod = new SqlParameter("@outCodigoError", SqlDbType.Int)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    cmd.Parameters.Add(outCod);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            movimientos.Add(new MovimientoPorDeduccionDetalle(
+                                reader.GetInt32(0),
+                                reader.GetInt32(1),
+                                reader.GetString(2),
+                                reader.GetInt32(3),
+                                reader.GetString(4),
+                                reader.GetDateTime(5),
+                                reader.GetDecimal(6),
+                                reader.GetString(7),
+                                reader.GetBoolean(8),
+                                reader.GetDecimal(9)
+                            ));
+                        }
+                    }
+
+                    // Verificar código de error después de leer los resultados
+                    codigoError = (int)outCod.Value;
+                    if (codigoError != 0)
+                    {
+                        return null;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            codigoError = 50099; // Código genérico de error
+                                 // Considera registrar el error
+            return null;
+        }
+
+        return movimientos;
+    }
+
 }
+
+
 
 
 
