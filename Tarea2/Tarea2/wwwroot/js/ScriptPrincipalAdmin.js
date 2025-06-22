@@ -77,7 +77,7 @@ document.getElementById("impersonarEmpleadoBtn").addEventListener("click", () =>
     if (empleadoSeleccionado) {
         localStorage.setItem('empleado', JSON.stringify(empleadoSeleccionado));
         localStorage.setItem('usuario', JSON.stringify(usuario));
-        window.location.href = 'ActualizarEmpleado.html';
+        window.location.href = 'PrincipalEmplea.html';
     }
 });
 

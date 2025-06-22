@@ -612,49 +612,65 @@ public class AccesarBD
     /*2. Planilla Mensual*/
     public static List<PlanillaMensual> ConsultarPlanillaMensual(int idEmpleado, int idPostByUser, string postInIP, DateTime postTime)
     {
-        string cadenaConexion = "Server=25.55.61.33;Database=Tarea3;Trusted_Connection=True;TrustServerCertificate=True;";
-        List<PlanillaMensual> planillas = new();
+        List<PlanillaMensual> planillas = new List<PlanillaMensual>();
+        string conexion = "Server=25.55.61.33;Database=Tarea3;Trusted_Connection=True;TrustServerCertificate=True;";
 
         try
         {
-            using SqlConnection con = new(cadenaConexion);
-            con.Open();
-            using SqlCommand cmd = new("ConsultarPlanillaMensual", con)
+            Console.WriteLine("Intentando abrir conexión...");
+            using (SqlConnection con = new SqlConnection(conexion))
             {
-                CommandType = CommandType.StoredProcedure
-            };
+                con.Open();
+                Console.WriteLine("Conexión abierta correctamente.");
 
-            cmd.Parameters.AddWithValue("@inIdEmpleado", idEmpleado);
-            cmd.Parameters.AddWithValue("@inIdPostByUser", idPostByUser);
-            cmd.Parameters.AddWithValue("@inPostInIP", postInIP);
-            cmd.Parameters.AddWithValue("@inPostTime", postTime);
-
-            SqlParameter outErr = new("@outCodigoError", SqlDbType.Int) { Direction = ParameterDirection.Output };
-            cmd.Parameters.Add(outErr);
-
-            using SqlDataReader reader = cmd.ExecuteReader();
-            while (reader.Read())
-            {
-                planillas.Add(new PlanillaMensual
+                using (SqlCommand cmd = new SqlCommand("ConsultarPlanillaMensual", con))
                 {
-                    Id = reader.GetInt32(0),
-                    IdEmpleado = reader.GetInt32(1),
-                    IdMes = reader.GetInt32(2),
-                    SalarioBruto = reader.GetDecimal(3),
-                    SalarioNeto = reader.GetDecimal(4),
-                    TotalDeducciones = reader.GetDecimal(5)
-                });
-            }
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-            int error = (int)outErr.Value;
-            if (error != 0)
-            {
-                Console.WriteLine("Error Consultar Mensual: " + error);
+                    cmd.Parameters.AddWithValue("@inIdEmpleado", idEmpleado);
+                    cmd.Parameters.AddWithValue("@inIdPostByUser", idPostByUser);
+                    cmd.Parameters.AddWithValue("@inPostInIP", postInIP);
+                    cmd.Parameters.AddWithValue("@inPostTime", postTime);
+
+                    SqlParameter outCod = new SqlParameter("@outCodigoError", SqlDbType.Int)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    cmd.Parameters.Add(outCod);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            planillas.Add(new PlanillaMensual
+                            {
+                                Id = reader.GetInt32(0),
+                                IdEmpleado = reader.GetInt32(1),
+                                IdMes = reader.IsDBNull(2) ? 0 : reader.GetInt32(2),
+                                SalarioBruto = reader.IsDBNull(3) ? 0 : reader.GetDecimal(3),
+                                SalarioNeto = reader.IsDBNull(4) ? 0 : reader.GetDecimal(4),
+                                TotalDeducciones = reader.IsDBNull(5) ? 0 : reader.GetDecimal(5)
+                            });
+                        }
+                    }
+
+                    // Validar código de error solo si fue asignado
+                    if (outCod.Value != DBNull.Value)
+                    {
+                        int codigoError = (int)outCod.Value;
+                        if (codigoError != 0)
+                            Console.WriteLine("Error en SP ConsultarPlanillaMensual: " + codigoError);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Advertencia: el valor de @outCodigoError es NULL.");
+                    }
+                }
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Excepcion: " + ex.Message);
+            Console.WriteLine("Excepción en ConsultarPlanillaMensual: " + ex.Message);
         }
 
         return planillas;
@@ -662,9 +678,72 @@ public class AccesarBD
 
 
 
+    /*3. Consultar Movimientos Salario Bruto*/
+    public static List<MovimientoDetalle> ConsultarMovimientos(int idPlanilla)
+    {
+        List<MovimientoDetalle> movimientos = new List<MovimientoDetalle>();
+        string conexion = "Server=25.55.61.33;Database=Tarea3;Trusted_Connection=True;TrustServerCertificate=True;";
 
+        try
+        {
+            using (SqlConnection con = new SqlConnection(conexion))
+            {
+                con.Open();
 
+                using (SqlCommand cmd = new SqlCommand("ConsultarMovimientos", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@inIdPlanilla", idPlanilla);
+                    SqlParameter outCod = new SqlParameter("@outCodigoError", SqlDbType.Int)
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    cmd.Parameters.Add(outCod);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            movimientos.Add(new MovimientoDetalle
+                            {
+                                Id = reader.GetInt32(0),
+                                IdEmpleado = reader.GetInt32(1),
+                                IdTipoMovimiento = reader.GetInt32(2),
+                                Fecha = reader.GetDateTime(3),
+                                CantidadHoras = reader.GetInt32(4),
+                                Monto = reader.GetDecimal(5),
+                                IdPlanillaSemanal = reader.GetInt32(6),
+                                IdRegistroAsistencia = reader.GetInt32(7),
+                                HoraEntrada = reader.GetTimeSpan(8),
+                                HoraSalida = reader.GetTimeSpan(9),
+                                Dia = reader.GetString(10),
+                                TipoMovimientoNombre = reader.GetString(11)
+                            });
+                        }
+                    }
+
+                    codigoError = (int)outCod.Value;
+                }
+            }
+        }
+        catch (SqlException sqlEx)
+        {
+            codigoError = sqlEx.Number;
+            Console.WriteLine($"Error SQL: {sqlEx.Number} - {sqlEx.Message}");
+        }
+        catch (Exception ex)
+        {
+            codigoError = 50099;
+            Console.WriteLine($"Error general: {ex.Message}");
+        }
+
+        return movimientos;
+    }
 }
+
+
+
 
 
 

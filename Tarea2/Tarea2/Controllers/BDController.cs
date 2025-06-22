@@ -363,5 +363,39 @@ namespace Tarea2.Controllers
                 return StatusCode(500, "Error interno");
             }
         }
+
+
+
+        /*3. Consultar Movimientos Salario Bruto*/
+        [HttpPost("ConsultarMovimientos")]
+        public ActionResult<List<MovimientoDetalle>> ConsultarMovimientos([FromBody] MovimientoRequest request)
+        {
+            try
+            {
+                Console.WriteLine($"Received IdPlanilla: {request?.IdPlanilla}");
+
+                if (request == null || request.IdPlanilla == 0)
+                {
+                    Console.WriteLine("Invalid request received");
+                    return BadRequest("Invalid request data");
+                }
+
+                var result = AccesarBD.ConsultarMovimientos(request.IdPlanilla, out int error);
+
+                Console.WriteLine($"SP returned error code: {error}");
+
+                if (error != 0)
+                    return StatusCode(500, $"Error SP: {error}");
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"API Error: {ex.ToString()}");
+                return StatusCode(500, $"Error interno: {ex.Message}");
+            }
+        }
+
+
     }
 }

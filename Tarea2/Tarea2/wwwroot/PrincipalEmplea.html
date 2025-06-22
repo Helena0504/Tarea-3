@@ -2,16 +2,16 @@
 <html>
 <head>
     <title>Planilla Obrera</title>
-
     <link rel="stylesheet" href="css/PrincipalAdmin.css">
 </head>
 <body>
+    <button id="logout">Logout</button>
+    <button id="RegresarAdmin">Regresar a Administrador</button>
 
     <div id="tabla">
-        <table>
+        <table id="tablaSemanalContainer">
             <thead>
                 <tr>
-                    <th>Semana</th>
                     <th>Horas Ordinarias</th>
                     <th>Horas Extra</th>
                     <th>Horas Extra Doble</th>
@@ -23,28 +23,26 @@
             <tbody id="tablaSemanal">
             </tbody>
         </table>
-        <table>
+
+        <table id="tablaMensualContainer" style="display: none;">
             <thead>
                 <tr>
-                    <th>Mes</th>
                     <th>Salario Bruto</th>
                     <th>Total Deducciones</th>
                     <th>Salario Neto</th>
                 </tr>
             </thead>
             <tbody id="tablaMensual">
-                
             </tbody>
         </table>
+    </div>
+<div id="acciones">
+    <div class="columna">
+        <button id="PlanillaSemanal">Planilla Semanal</button>
+        <button id="PlanillaMensual">Planilla Mensual</button>
 
     </div>
-    <div id="acciones">
-        <div class="columna">
-            <button id="PlanillaSemanal">Planilla Semanal</button>
-            <button id="PlanillaMensual" disabled>Planilla Mensual</button>
-
-        </div>
-    </div>
-    <script src="js/ScriptPrincipalEmpleado.js"></script>
+</div>
+<script src="js/ScriptPrincipalEmpleado.js"></script>
 </body>
 </html>
