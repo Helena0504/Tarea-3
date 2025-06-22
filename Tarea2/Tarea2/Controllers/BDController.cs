@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Tarea2.Modelos;
+using static AccesarBD;
 
 //Esta api controller se encarga de conectar la capa usuario con la capa de acceso a BD
 //Es decir, ahora las stored procedures se pueden llamar desde la vista usuario, pero no se puede ver su contenido
@@ -372,29 +373,73 @@ namespace Tarea2.Controllers
         {
             try
             {
-                Console.WriteLine($"Received IdPlanilla: {request?.IdPlanilla}");
+                int codigoError;
+                string mensajeError;
+                int filaError;
 
-                if (request == null || request.IdPlanilla == 0)
-                {
-                    Console.WriteLine("Invalid request received");
-                    return BadRequest("Invalid request data");
-                }
-
-                var result = AccesarBD.ConsultarMovimientos(request.IdPlanilla, out int error);
-
-                Console.WriteLine($"SP returned error code: {error}");
-
-                if (error != 0)
-                    return StatusCode(500, $"Error SP: {error}");
-
-                return Ok(result);
+                var resultado = AccesarBD.ConsultarMovimientos(request.IdPlanilla, out codigoError, out mensajeError, out filaError);
+                return Ok(resultado);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"API Error: {ex.ToString()}");
-                return StatusCode(500, $"Error interno: {ex.Message}");
+                // Puedes personalizar el mensaje que envías al frontend
+                return StatusCode(500, new { mensaje = ex.Message });
             }
         }
+
+
+
+        /*4. Consultar Asistencia*/
+
+        [HttpPost]
+        [Route("ConsultarRegistroAsistencia")]
+        public IActionResult ConsultarRegistroAsistencia([FromBody] int idRegistro)
+        {
+            int codigoError;
+            var resultado = AccesarBD.ConsultarRegistroAsistencia(idRegistro, out codigoError);
+
+            if (codigoError != 0)
+                return BadRequest(new { mensaje = "Error en SP", codigoError });
+
+            return Ok(resultado);
+        }
+
+
+
+        /*5. Consultar Deduccion Semanal*/
+        [HttpPost("ConsultarDeduccionesSemanales")]
+        public IActionResult ConsultarDeduccionesSemanales([FromBody] PlanillaRequest request)
+        {
+            int codigoError;
+            var deducciones = DeduccionesBD.ConsultarDeduccionesSemanales(request.IdPlanilla, out codigoError);
+
+            if (codigoError != 0)
+                return BadRequest(new { mensaje = "Error en SP", codigoError });
+
+            return Ok(deducciones.Select(d => new {
+                d.NombreTipoDeduccion,
+                d.Monto
+            }));
+        }
+
+
+        /*6. Consultar Deduccion Mensual*/
+
+        [HttpPost("ConsultarDeduccionesMensuales")]
+        public IActionResult ConsultarDeduccionesMensuales([FromBody] PlanillaRequest request)
+        {
+            int codigoError;
+            var deducciones = DeduccionesBD.ConsultarDeduccionesMensuales(request.IdPlanilla, out codigoError);
+
+            if (codigoError != 0)
+                return BadRequest(new { mensaje = "Error en SP", codigoError });
+
+            return Ok(deducciones.Select(d => new {
+                d.NombreTipoDeduccion,
+                d.Monto
+            }));
+        }
+
 
 
     }

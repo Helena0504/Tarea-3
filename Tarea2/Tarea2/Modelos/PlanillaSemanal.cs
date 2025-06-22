@@ -11,12 +11,15 @@
         public decimal SalarioBruto { get; set; }
         public decimal SalarioNeto { get; set; }
         public decimal TotalDeducciones { get; set; }
-    
+        public DateTime FechaInicio { get; set; }
+        public DateTime FechaFin { get; set; }
 
-     // Constructor con 9 parámetros
-    public PlanillaSemanal(int id, int idEmpleado, int idSemana, decimal horasOrdinarias,
-                           decimal horasExtra, decimal horasExtraDoble, decimal salarioBruto,
-                           decimal salarioNeto, decimal totalDeducciones)
+
+        // Constructor con 9 parámetros
+        public PlanillaSemanal(int id, int idEmpleado, int idSemana, decimal horasOrdinarias,
+                       decimal horasExtra, decimal horasExtraDoble, decimal salarioBruto,
+                       decimal salarioNeto, decimal totalDeducciones,
+                       DateTime fechaInicio, DateTime fechaFin)
         {
             Id = id;
             IdEmpleado = idEmpleado;
@@ -27,8 +30,11 @@
             SalarioBruto = salarioBruto;
             SalarioNeto = salarioNeto;
             TotalDeducciones = totalDeducciones;
+            FechaInicio = fechaInicio;
+            FechaFin = fechaFin;
         }
 
-     public PlanillaSemanal() { }
+
+        public PlanillaSemanal() { }
     }
 }

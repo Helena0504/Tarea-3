@@ -16,6 +16,9 @@ document.addEventListener("DOMContentLoaded", function () {
         empleado = JSON.parse(localStorage.getItem('empleado'));
         document.getElementById('logout').style.display = 'none';
     }
+    if (empleado && empleado.nombre) {
+        document.getElementById("tituloPlanillas").textContent = `Planillas Empleado ${empleado.nombre}`;
+    }
     console.log("Script se ha cargado correctamente");
 });
 
@@ -108,6 +111,9 @@ function listarEmpleados(idPostByUser, PostInIP, PostTime) {
                     console.warn("No se encontró un empleado asociado al usuario");
                 }
             }
+            if (empleado && empleado.nombre) {
+                document.getElementById("tituloPlanillas").textContent = `Planillas Empleado ${empleado.nombre}`;
+            }
             consultarPlanillaSemanal(parseInt(empleado.id), parseInt(usuario.id), "127.0.0.1");
         })
         .catch(error => {
@@ -151,12 +157,16 @@ function acomodarPlanillasSemanales(planillas) {
     tbody.innerHTML = "";
 
     if (!planillas || planillas.length === 0) {
-        tbody.innerHTML = "<tr><td colspan='7'>No hay planillas semanales.</td></tr>";
+        tbody.innerHTML = "<tr><td colspan='8'>No hay planillas semanales.</td></tr>";
         return;
     }
 
     planillas.forEach(p => {
         const tr = document.createElement("tr");
+
+        // Columna Semana (FechaInicio - FechaFin)
+        const tdSemana = document.createElement("td");
+        tdSemana.innerHTML = `Inicio: ${new Date(p.fechaInicio).toLocaleDateString()}<br>Fin: ${new Date(p.fechaFin).toLocaleDateString()}`;
 
         const tdOrdinarias = document.createElement("td");
         tdOrdinarias.textContent = p.horasOrdinarias;
@@ -167,7 +177,6 @@ function acomodarPlanillasSemanales(planillas) {
         const tdExtraDoble = document.createElement("td");
         tdExtraDoble.textContent = p.horasExtraDoble;
 
-        // Columna Salario Bruto (clicable)
         const tdBruto = document.createElement("td");
         tdBruto.textContent = p.salarioBruto.toFixed(2);
         tdBruto.style.cursor = "pointer";
@@ -179,18 +188,17 @@ function acomodarPlanillasSemanales(planillas) {
             window.location.href = "Movimientos.html";
         };
 
-        // Columna Total Deducciones (clicable)
         const tdDeducciones = document.createElement("td");
         tdDeducciones.textContent = p.totalDeducciones.toFixed(2);
         tdDeducciones.style.cursor = "pointer";
         tdDeducciones.onclick = () => {
             console.log("Clic en Total Deducciones:", p);
-            // Acción específica para mostrar detalle de deducciones
         };
 
         const tdNeto = document.createElement("td");
         tdNeto.textContent = p.salarioNeto.toFixed(2);
 
+        tr.appendChild(tdSemana);
         tr.appendChild(tdOrdinarias);
         tr.appendChild(tdExtra);
         tr.appendChild(tdExtraDoble);
@@ -201,6 +209,7 @@ function acomodarPlanillasSemanales(planillas) {
         tbody.appendChild(tr);
     });
 }
+
 
 
 
@@ -242,37 +251,38 @@ function acomodarPlanillasMensuales(planillas) {
     planillas.forEach(pm => {
         const tr = document.createElement("tr");
 
-        // Columna Salario Bruto (con acción al dar clic)
+        // Nueva columna: Fecha Inicio / Fin del mes
+        const tdMes = document.createElement("td");
+        tdMes.innerHTML = `Inicio: ${new Date(pm.fechaInicio).toLocaleDateString()}<br>Fin: ${new Date(pm.fechaFin).toLocaleDateString()}`;
+
+        // Columna Salario Bruto (clicable)
         const tdBruto = document.createElement("td");
         tdBruto.textContent = pm.salarioBruto.toFixed(2);
         tdBruto.style.cursor = "pointer";
-        tdBruto.onclick = () => {
-            console.log("Clic en Salario Bruto:", pm);
-            // Aquí puedes ejecutar una acción específica
-        };
 
-        // Columna Total Deducciones (con acción al dar clic)
+        // Columna Total Deducciones (clicable)
         const tdDeducciones = document.createElement("td");
         tdDeducciones.textContent = pm.totalDeducciones.toFixed(2);
         tdDeducciones.style.cursor = "pointer";
         tdDeducciones.onclick = () => {
             console.log("Clic en Total Deducciones:", pm);
-            // Aquí puedes ejecutar una acción específica
         };
 
         // Columna Salario Neto
         const tdNeto = document.createElement("td");
         tdNeto.textContent = pm.salarioNeto.toFixed(2);
 
-        // Agregar todas las columnas a la fila
+        // Agregar columnas a la fila
+        tr.appendChild(tdMes);
         tr.appendChild(tdBruto);
         tr.appendChild(tdDeducciones);
         tr.appendChild(tdNeto);
 
-        // Agregar fila a la tabla
         tbody.appendChild(tr);
     });
 }
+
+
 
 
 /*Le da formato a la fecha*/

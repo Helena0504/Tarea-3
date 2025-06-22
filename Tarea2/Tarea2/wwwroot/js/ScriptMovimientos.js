@@ -23,39 +23,34 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function consultarMovimientos(idPlanilla) {
-    // 1. Verifica que el idPlanilla sea válido
-    console.log("ID Planilla a enviar:", idPlanilla);
-
-    // 2. Asegura el formato correcto del body
-    const requestBody = JSON.stringify({ IdPlanilla: idPlanilla });
-    console.log("Request body:", requestBody);
-
     fetch("https://localhost:5001/api/BDController/ConsultarMovimientos", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-        },
-        body: requestBody
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ IdPlanilla: idPlanilla })
     })
         .then(resp => {
-            console.log("Status code:", resp.status);
             if (!resp.ok) {
-                // Intenta leer el mensaje de error
-                return resp.text().then(text => { throw new Error(text) });
+                return resp.text().then(textoError => {
+                    throw new Error(textoError);
+                });
             }
             return resp.json();
         })
         .then(movimientos => {
-            // Moved inside the promise chain
+            console.log("Datos movimientos recibidos:", movimientos);
             mostrarMovimientosPorDia(movimientos);
         })
         .catch(err => {
-            console.error("Error al consultar movimientos:", err);
+            console.error("Error al consultar movimientos:", err.message);
             const contenedor = document.getElementById("contenedorDias");
-            if (contenedor) contenedor.innerHTML = "<p>Error al cargar movimientos.</p>";
+            if (contenedor) {
+                contenedor.innerHTML = `<p>${err.message}</p>`;
+            }
         });
 }
+
+
+
 
 function mostrarMovimientosPorDia(movimientos) {
     const contenedor = document.getElementById("contenedorDias");
@@ -115,9 +110,15 @@ function mostrarMovimientosPorDia(movimientos) {
                 tr.appendChild(tdMonto);
 
                 tr.onclick = () => {
-                    alert(`ID Movimiento: ${mov.id}, ID RegistroAsistencia: ${mov.idRegistroAsistencia}`);
-                    // Aquí puedes redirigir a otra vista si es necesario
+
+                    localStorage.setItem('usuario', JSON.stringify(usuario));
+                    localStorage.setItem('empleado', JSON.stringify(empleado));
+                    localStorage.setItem('idPlanillaSeleccionada', idPlanilla.toString());
+                    localStorage.setItem('idRegistroAsistencia', mov.idRegistroAsistencia.toString());
+
+                    window.location.href = 'Asistencia.html';
                 };
+
 
                 tbody.appendChild(tr);
             });

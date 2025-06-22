@@ -2,28 +2,38 @@
 {
     public class MovimientoDetalle
     {
-        public int Id { get; set; }
-        public int IdEmpleado { get; set; }
-        public int IdTipoMovimiento { get; set; }
-        public string TipoMovimientoNombre { get; set; } = "";
-        public DateTime Fecha { get; set; }
-        public int CantidadHoras { get; set; }
-        public decimal Monto { get; set; }
-        public int IdPlanillaSemanal { get; set; }
-        public int IdRegistroAsistencia { get; set; }
-        public TimeSpan HoraEntrada { get; set; }
-        public TimeSpan HoraSalida { get; set; }
-        public string Dia { get; set; } = "";
-        
-        public MovimientoDetalle(int id, int idEmpleado, int idTipoMovimiento, string tipoMovimientoNombre,
-                                 DateTime fecha, int cantidadHoras, decimal monto,
-                                 int idPlanillaSemanal, int idRegistroAsistencia,
-                                 TimeSpan horaEntrada, TimeSpan horaSalida, string dia)
+        public int Id { get; set; }                      // índice 0
+        public int IdEmpleado { get; set; }              // índice 1
+        public int IdTipoMovimiento { get; set; }        // índice 2
+        public DateTime Fecha { get; set; }               // índice 3
+        public int CantidadHoras { get; set; }            // índice 4
+        public decimal Monto { get; set; }                 // índice 5
+        public int IdPlanillaSemanal { get; set; }        // índice 6
+        public int IdRegistroAsistencia { get; set; }     // índice 7
+        public TimeSpan HoraEntrada { get; set; }         // índice 8
+        public TimeSpan HoraSalida { get; set; }          // índice 9
+        public string Dia { get; set; } = "";              // índice 10
+        public string TipoMovimientoNombre { get; set; } = "";  // índice 11
+
+        public MovimientoDetalle() { }
+
+        public MovimientoDetalle(
+            int id,
+            int idEmpleado,
+            int idTipoMovimiento,
+            DateTime fecha,
+            int cantidadHoras,
+            decimal monto,
+            int idPlanillaSemanal,
+            int idRegistroAsistencia,
+            TimeSpan horaEntrada,
+            TimeSpan horaSalida,
+            string dia,
+            string tipoMovimientoNombre)
         {
             Id = id;
             IdEmpleado = idEmpleado;
             IdTipoMovimiento = idTipoMovimiento;
-            TipoMovimientoNombre = tipoMovimientoNombre;
             Fecha = fecha;
             CantidadHoras = cantidadHoras;
             Monto = monto;
@@ -32,9 +42,8 @@
             HoraEntrada = horaEntrada;
             HoraSalida = horaSalida;
             Dia = dia;
+            TipoMovimientoNombre = tipoMovimientoNombre;
         }
-
-        
-        public MovimientoDetalle() { }
     }
+
 }
