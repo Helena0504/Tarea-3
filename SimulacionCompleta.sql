@@ -237,11 +237,23 @@ DECLARE @idMes INT;
 						, @Activo
 					);
 				END
+				/* Trazabilidad: se inserta en EventoLog */
+			INSERT INTO dbo.EventoLog (idTipoEvento, Descripcion, idPostByUser, PostInIP, PostTime)
+			SELECT
+				  5,
+				  CONCAT('Nuevo Empleado: ', E.id, ' - ', E.Nombre, ', Puesto:', E.idPuesto, ', Dept:', E.idDepartamento, ', Doc:', E.idTipoDocumento, '-', E.ValorDocumento, ', FechaNac:', FORMAT(E.FechaNacimiento, 'yyyy-MM-dd')),
+				  5,
+				'25.55.61.33',
+				GETDATE()
+			FROM dbo.Empleado E
+			WHERE E.id = @loE;
 
 				SET @loE = @loE + 1;
 			END
 			DELETE FROM @TablaUsuario
 			DELETE FROM @TablaEmpleado
+
+
 
 
 			--Eliminar Empleados
@@ -252,6 +264,14 @@ DECLARE @idMes INT;
 			INNER JOIN @TablaEmpleadoEliminado T
 			ON E.ValorDocumento = T.ValorDocumentoIdentidad;
 		
+		/*Trazabilidad: Se inserta en EventoLog*/
+		INSERT INTO dbo.EventoLog(idTipoEvento, Descripcion, idPostByUser, PostInIP, PostTime)
+		SELECT 6, CONCAT('ID: ', E.id, 'Nombre: ', E.Nombre, 'FechaNac: ', E.FechaNacimiento, 'IDPuesto: ', E.idPuesto, 'IDDepartamento: ', E.idDepartamento, 'IDTipoDoc: ', E.idTipoDocumento, 'Doc: ', E.ValorDocumento, 'IDUsuario: ', E.idUsuario), 5, '25.55.61.33',
+				GETDATE()
+		FROM dbo.Empleado E
+		INNER JOIN @TablaEmpleadoEliminado T
+		ON E.ValorDocumento = T.ValorDocumentoIdentidad;
+
 			DELETE FROM @TablaEmpleadoEliminado
 
 
